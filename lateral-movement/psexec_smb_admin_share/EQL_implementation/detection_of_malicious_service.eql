@@ -1,0 +1,2 @@
+event.dataset == "windows.system" and
+event.code == "7045"
