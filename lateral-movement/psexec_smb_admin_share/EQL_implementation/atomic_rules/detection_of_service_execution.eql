@@ -1,5 +1,0 @@
-process where event.module == "sysmon" and 
-  event.code == "1" and
-  process.parent.executable : "*\\services.exe" and
-  process.executable : ("*.exe", "*.bat", "*.ps1") and
-  not process.executable : "C:\\Windows\\System32\\*"
