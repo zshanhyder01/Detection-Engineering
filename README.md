@@ -1,5 +1,5 @@
 
-# What is Detection Engineering
+## What is Detection Engineering
 
 Detection Engineering is the practice of designing, building, testing, and maintaining detection logic to identify malicious or suspicious activity within an environment. It plays a critical role in modern cybersecurity by enabling organizations to proactively detect threats rather than only reacting to incidents.
 
@@ -8,22 +8,20 @@ At its core, Detection Engineering focuses on answering two key questions:
 Why detect? — Understanding attacker behavior, often guided by frameworks like MITRE ATT&CK, which categorizes adversary tactics and techniques.
 How to detect? — Implementing logic using logs, telemetry, and analytics to identify those behaviors.
 
-## Why is it important?
+### Why is it important?
 Improves visibility into attacker activity
 Reduces dwell time of threats
 Enables faster and more accurate incident response
 Bridges the gap between threat intelligence and security operations
 
-# Introduction to This Repository
+## Introduction to This Repository
 
 This repository is designed to provide practical, ready-to-use detection content aligned with the MITRE ATT&CK framework.
 
 It covers common techniques (the "how") mapped to tactics (the "why")
 Each technique includes detection rules to help identify adversary behavior
 The goal is to make detection engineering actionable, standardized, and reusable
-What You’ll Find Here
-
-## For each detection:
+For each rule (Atomic or Correlation), You’ll Find: 
 
 ### SIGMA Rule (Standard Format)
 A vendor-agnostic rule format that can be converted into queries for different SIEM platforms.
