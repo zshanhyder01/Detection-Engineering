@@ -1,0 +1,6 @@
+/* Elastic EQL Query */
+file where event.dataset == "windows.security" and
+  event.code == "5145" and
+  winlog.event_data.ShareName : ("*C$*", "*ADMIN$*") and
+  winlog.event_data.AccessMask == "0x2" and
+  file.extension : ("exe", "bat", "ps1")
