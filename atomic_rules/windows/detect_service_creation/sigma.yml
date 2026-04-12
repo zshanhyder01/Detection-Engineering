@@ -1,0 +1,16 @@
+title: Service Creation Detected (Baseline)
+id: Ltm_10042026_2
+status: test
+description: Detects all Windows service creation events (Event ID 7045)
+author: Zeeshan
+logsource:
+  product: windows
+  service: system
+detection:
+  selection:
+    EventID: 7045
+  condition: selection
+level: low
+tags:
+  - attack.persistence
+- attack.t1543
