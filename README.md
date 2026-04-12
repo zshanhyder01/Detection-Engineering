@@ -1,11 +1,12 @@
 # Detection Engineering
 
-### Contents
-1.  [What is Detection Engineering](#what-is-detection-engineering)
-2.  Introduction to This Repository
-3.  Atomic Rules
-4.  Correlation Rules
-5.  Rule Usage & Fine-Tunning Notes
+## Table of Contents
+
+1. [What is Detection Engineering](#what-is-detection-engineering)
+2. [Introduction to This Repository](#introduction-to-this-repository)
+3. [Atomic Rules](#atomic-rules)
+4. [Correlation Rules](#correlation-rules)
+5. [Rule Usage & Fine-Tunning Notes](#rule-usage--fine-tunning-notes)
 
 
 ## What is Detection Engineering
