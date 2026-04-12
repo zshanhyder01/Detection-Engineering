@@ -20,7 +20,7 @@ This repository is designed to provide practical, ready-to-use detection content
 
 It covers common techniques (the "how") mapped to tactics (the "why")
 Each technique includes detection rules to help identify adversary behavior
-The goal is to make detection engineering actionable, standardized, and reusable
+The goal is to make detection engineering actionable, standardized, and reusable.
 For each rule (Atomic or Correlation), You’ll Find: 
 
 ### SIGMA Rule (Standard Format)
@@ -29,18 +29,6 @@ A vendor-agnostic rule format that can be converted into queries for different S
 ### Elastic EQL Rule (Quick Testing)
 Provided for fast validation and testing in Elastic environments.
 
-## Important Notes on Rule Usage
-SIGMA rule conversion depends heavily on your environment, including:
-Log sources availability
-Log parsing and normalization
-Field naming conventions
-
-### You should:
-Follow tuning guidelines in this repository
-Adapt rules to your SIEM schema
-Validate detections against real data
-
-Out-of-the-box rules may not work perfectly without customization.
 
 # Atomic Rules
 ## What are Atomic Rules?
