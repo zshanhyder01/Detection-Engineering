@@ -1,0 +1,4 @@
+/* Elastic EQL Query */
+file where event.dataset == "windows.security" and
+  event.code == "4660" and
+  file.extension : ("exe", "bat", "ps1")
