@@ -1,16 +1,25 @@
-title: Service Creation Detected (Baseline)
-id: Ltm_10042026_2
+title: Suspicious Process Spawned by Services.exe
+id: Ltm_10042026_3
 status: test
-description: Detects all Windows service creation events (Event ID 7045)
+description: Detects suspicious processes spawned by services.exe
 author: Zeeshan
 logsource:
   product: windows
-  service: system
+  service: sysmon
 detection:
   selection:
-    EventID: 7045
-  condition: selection
-level: low
+    EventID: 1
+    ParentImage|endswith: '\services.exe'
+  suspicious_process:
+    Image|endswith:
+      - '.exe'
+      - '.bat'
+      - '.ps1'
+  filter_known_good:
+    Image|contains:
+      - '\Windows\System32\'
+  condition: selection and suspicious_process and not filter_known_good
+level: medium
 tags:
-  - attack.persistence
-  - attack.t1543
+  - attack.execution
+  - attack.t1569
