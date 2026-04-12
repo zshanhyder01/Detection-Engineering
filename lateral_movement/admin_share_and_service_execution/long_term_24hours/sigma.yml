@@ -1,0 +1,27 @@
+title: Lateral Movement via Admin Share and Service Execution (48h)
+id: Ltm_corelate_10042026_2
+status: test
+description: Detects slow lateral movement across 48 hours using service execution pattern. Cleanup is optional.
+author: Zeeshan
+date: 2026/04/10
+
+correlation:
+  type: sequence
+  timeframe: 48h
+
+  rules:
+    - Ltm_10042026_1
+    - Ltm_10042026_2
+    - Ltm_10042026_3
+
+  optional:
+     - Ltm_10042026_4
+
+  group-by:
+    - UserName
+
+level: high
+tags:
+  - attack.lateral_movement
+  - attack.t1021
+  - attack.t1569
