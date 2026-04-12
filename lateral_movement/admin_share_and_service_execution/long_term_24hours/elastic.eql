@@ -1,4 +1,4 @@
-sequence by user.name with maxspan=1h
+sequence by user.name with maxspan=48h
   /* Reference Rule 1 */
   [any where signal.rule.id == "Ltm_10042026_1"] 
   
