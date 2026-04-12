@@ -100,3 +100,17 @@ Understand attacker techniques in depth
 Quickly deploy and adapt detection logic
 
 Detection Engineering is not a one-time effort — it is a continuous cycle of improvement. Use this repository as a foundation, and adapt it to your environment for maximum effectiveness.
+
+## Important Notes on Rule Usage
+SIGMA rule conversion depends heavily on your environment, including:
+Log sources availability
+Log parsing and normalization
+Field naming conventions
+
+### You should:
+Follow tuning guidelines in this repository
+Adapt rules to your SIEM schema
+Validate detections against real data
+
+Out-of-the-box rules may not work perfectly without customization.
+
