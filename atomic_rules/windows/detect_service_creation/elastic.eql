@@ -1,0 +1,3 @@
+/* Elastic EQL Query */
+any where event.dataset == "windows.system" and
+  event.code == "7045"
