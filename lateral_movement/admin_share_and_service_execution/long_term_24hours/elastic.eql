@@ -1,0 +1,9 @@
+sequence by user.name with maxspan=1h
+  /* Reference Rule 1 */
+  [any where signal.rule.id == "Ltm_10042026_1"] 
+  
+  /* Reference Rule 2 */
+  [any where signal.rule.id == "Ltm_10042026_2"]
+  
+  /* Reference Rule 3 */
+  [any where signal.rule.id == "Ltm_10042026_3"]
