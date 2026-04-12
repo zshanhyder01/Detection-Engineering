@@ -1,0 +1,26 @@
+title: Detection of malicious file drop
+id: Ltm_10042026_1
+status: test
+description: Detects file write to administrative shares (C$, ADMIN$) with executable extensions
+author: Zeeshan
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 5145
+    ShareName|contains:
+      - 'C$'
+      - 'ADMIN$'
+    AccessMask|contains:
+      - '0x2'   # Write Data
+  file_extension:
+    RelativeTargetName|endswith:
+      - '.exe'
+      - '.bat'
+      - '.ps1'
+  condition: selection and file_extension
+level: medium
+tags:
+  - attack.lateral_movement
+  - attack.t1021
