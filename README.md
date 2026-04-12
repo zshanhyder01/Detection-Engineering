@@ -30,22 +30,19 @@ A vendor-agnostic rule format that can be converted into queries for different S
 Provided for fast validation and testing in Elastic environments.
 
 
-# Atomic Rules
-## What are Atomic Rules?
+## Atomic Rules
 
-Atomic rules are simple, single-event detections that identify a specific activity or behavior in isolation. They are the building blocks of detection engineering.
-
-## These rules typically:
+Atomic rules are simple, single-event detections that identify a specific activity or behavior in isolation. They are the building blocks of detection engineering. These rules typically:
 
 Focus on one log source
 Detect a single condition or event
 Are easy to test and validate
 
-## Example
+### Example
 
 ### Scenario: Detect execution of PowerShell with encoded commands
 
-## SIGMA (simplified):
+### SIGMA (simplified):
 
 title: Suspicious PowerShell Encoded Command
 logsource:
@@ -59,18 +56,15 @@ detection:
 
 This rule triggers when PowerShell is executed with encoded arguments, which is commonly used for obfuscation.
 
-# Correlation Rules
-## What are Correlation Rules?
+## Correlation Rules
 
-Correlation rules combine multiple events across time, users, or systems to detect more complex attack patterns.
-
-They are used to:
+Correlation rules combine multiple events across time, users, or systems to detect more complex attack patterns.They are used to:
 
 Identify multi-step attacks
 Reduce false positives from isolated events
 Provide higher-confidence detections
 
-## Example
+### Example
 
 ### Scenario: Detect a potential account compromise
 
@@ -91,8 +85,7 @@ THEN
 
 This type of rule correlates multiple signals to identify suspicious behavior that would not be obvious from a single event.
 
-## Final Notes
-
+## Rule Usage & Fine-Tunning Notes
 This repository is intended to help security practitioners:
 
 Build strong detection capabilities
@@ -101,7 +94,6 @@ Quickly deploy and adapt detection logic
 
 Detection Engineering is not a one-time effort — it is a continuous cycle of improvement. Use this repository as a foundation, and adapt it to your environment for maximum effectiveness.
 
-## Important Notes on Rule Usage
 SIGMA rule conversion depends heavily on your environment, including:
 Log sources availability
 Log parsing and normalization
