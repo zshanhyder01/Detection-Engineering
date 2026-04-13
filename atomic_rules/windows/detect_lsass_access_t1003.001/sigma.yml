@@ -1,0 +1,22 @@
+title: LSASS Memory Access for Credential Theft
+id:     detect_lsass_access_t1003.001
+status: test
+description: Detects process access to LSASS memory (Sysmon Event ID 10).
+author: Zeeshan Haider
+tags:
+    - attack.credential_access
+    - attack.t1003.001 # LSASS Memory
+logsource:
+    product: windows
+    service: sysmon
+detection:
+    selection:
+        EventID: 10
+        TargetImage: 'C:\Windows\System32\lsass.exe'
+        GrantedAccess: 
+            - '0x1fffff' # Full Access
+            - '0x1410'   # Remote/Read access
+    condition: selection
+falsepositives:
+    - Antivirus, EDR agents, Task Manager
+level: high
