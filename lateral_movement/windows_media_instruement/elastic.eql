@@ -1,0 +1,18 @@
+sequence by winlog.computer_name with maxspan=1m
+  /* STEP 1: Administrative Network Authentication */
+  [authentication where event.code == "4624" and 
+   winlog.logon.type == "3" and 
+   not user.name : "*$"] 
+
+  /* STEP 2: Network Connection (RPC Port 135) */
+  [network where event.dataset == "windows.sysmon_operational" and event.code == "3" and
+   destination.port == 135 and 
+   network.direction == "ingress"]
+
+  /* STEP 3 & 4: WMI Process Execution (Atomic Execution Logic) */
+  [process where event.code : ("1", "4688") and
+   process.parent.name : "WmiPrvSE.exe" and
+   process.name : ("cmd.exe", "powershell.exe", "pwsh.exe", "rundll32.exe", "mshta.exe")]
+   
+   /* Join the Logon event to the Process event via Logon ID */
+   by winlog.event_data.TargetLogonId
