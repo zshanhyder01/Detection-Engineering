@@ -1,0 +1,19 @@
+title: Remote WMI RPC Connection (Port 135)
+id: detect_remote_wmi_rpc_connection_01
+status: experimental
+description: Detects inbound network connections on Port 135 (RPC) for WMI negotiation.
+author: Zeeshan Haider
+logsource:
+    product: windows
+    service: sysmon
+detection:
+    selection:
+        EventID: 3  # Sysmon: Network Connection
+        DestinationPort: 135
+        Initiated: 'false' # 'false' indicates an INBOUND connection
+    filter_local:
+        SourceIp: 
+            - '127.0.0.1'
+            - '::1'
+    condition: selection and not filter_local
+level: medium
