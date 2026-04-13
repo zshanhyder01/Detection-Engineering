@@ -1,0 +1,4 @@
+/* MITRE ATT&CK: T1021.001 - Remote Desktop Protocol */
+iam where event.code == "4624" and 
+  winlog.logon.type == "10" and 
+  event.outcome == "success"
