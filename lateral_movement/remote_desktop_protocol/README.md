@@ -1,6 +1,5 @@
 ## Technique: RDP Lateral Movement Lifecycle
 
-### Brief Description
 This detection strategy focuses on the end-to-end lifecycle of lateral movement via Remote Desktop Protocol (RDP). It tracks an attacker from the initial **Credential Acquisition** phase (dumping LSASS memory) through the **Lateral Movement** hop (via standard or Restricted Admin RDP) to the final **Privilege Escalation** (UAC Bypass) on the target host. By correlating these three distinct stages, we reduce false positives and identify high-confidence malicious activity.
 
 ---
