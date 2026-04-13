@@ -1,0 +1,7 @@
+/* MITRE ATT&CK: T1548.002 - Bypass User Account Control */
+process where event.code : ("1", "4688") and
+  process.executable : (
+    "?:\\Windows\\System32\\fodhelper.exe",
+    "?:\\Windows\\System32\\computerdefaults.exe",
+    "?:\\Windows\\System32\\sdclt.exe"
+  )
