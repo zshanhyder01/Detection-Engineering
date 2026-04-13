@@ -1,0 +1,11 @@
+process where event.dataset == "windows.sysmon_operational" and 
+  event.code == "1" and
+  process.parent.name : "WmiPrvSE.exe" and
+  process.name : ("cmd.exe", "powershell.exe", "pwsh.exe", "rundll32.exe", "mshta.exe") and
+  process.command_line : (
+    "* -e *", 
+    "* -enc *", 
+    "* -encodedcommand *", 
+    "*net user *", 
+    "* /c *"
+  )
