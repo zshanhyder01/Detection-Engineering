@@ -1,1 +1,28 @@
+title: Correlation - WMI Lateral Movement Detected
+id: wmi_correlation_chain
+description: Correlates successful network authentication with the WMI Execution Atomic rule.
+author: Zeeshan Haider
+status: test
+tags:
+    - attack.lateral_movement
+    - attack.t1047
+logsource:
+    product: windows
+    service: security
+detection:
+    # STEP 1: Administrative Authentication
+    selection_logon:
+        EventID: 4624
+        LogonType: 3 # Network Logon
+    
+    # STEP 2: Reference Atomic Rule 1 (Transport)
+    selection_network:
+        rule_ref: wmi_network_transport
 
+    # STEP 3 & 4: Reference Atomic Rule 2 (Execution)
+    selection_execution:
+        rule_ref: wmi_execution_spawn
+
+    condition: selection_logon followed by selection_network followed by selection_execution
+    timeframe: 1m
+level: critical
