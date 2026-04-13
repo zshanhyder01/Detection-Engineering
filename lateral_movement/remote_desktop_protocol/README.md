@@ -31,11 +31,12 @@ The sequence of events follows a logical progression commonly seen in advanced p
 | **Lateral Movement** | RDP Success | **Security 4624** (Logon Type 10) | [T1021.001](https://attack.mitre.org/techniques/T1021/001/) |
 | **Privilege Escalation**| UAC Bypass Execution | **Sysmon 1 / Security 4688** | [T1548.002](https://attack.mitre.org/techniques/T1548/002/) |
 
-#### 1. LSASS Access (Atomic)
+
+#### 1. [LSASS Access (Atomic)](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_lsass_access_t1003.001)
 Detects specific access masks (`0x1fffff`, `0x1410`) against the LSASS process, indicating a memory dump attempt for credential harvesting.
 
-#### 2. RDP Connection (Atomic)
+#### 2. [RDP Connection (Atomic)](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/Detect_Successful_RDP_Logon_t1021.001)
 Monitors for successful Remote Interactive logons. This rule is enhanced to monitor for the `/RestrictedAdmin` flag in process command lines for Pass-the-Hash scenarios.
 
-#### 3. UAC Bypass (Atomic)
+#### 3. [UAC Bypass (Atomic)](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/UAC_Bypass_via_Fodhelper_t1548.002)
 Monitors for the execution of Windows binary primitives (e.g., `fodhelper.exe`, `computerdefaults.exe`) that are frequently abused to bypass UAC prompts and gain administrative privileges.
