@@ -1,0 +1,18 @@
+title: Successful RDP Connection (Standard or Restricted Admin)
+id: Detect_Successful_RDP_Logon_t1021.001
+description: Detects successful RDP logins via Event ID 4624 Type 10.
+author: Zeeshan Haider
+tags:
+    - attack.lateral_movement
+    - attack.t1021.001 # Remote Desktop Protocol
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 10
+    # Field to check for Restricted Admin (optional, but captures both)
+    # The rule triggers on any Type 10 regardless of flags.
+    condition: selection
+level: medium
