@@ -24,5 +24,10 @@ detection:
         rule_ref: wmi_execution_spawn
 
     condition: selection_logon followed by selection_network followed by selection_execution
+
+    group-by: 
+        - TargetLogonId   # Ties the Logon (4624) to the Process (4688/1)
+        - DestinationIp   # Ties the Network connection to the target host
+        
     timeframe: 1m
 level: critical
