@@ -1,0 +1,10 @@
+/* MITRE ATT&CK: T1003.001 - LSASS Memory */
+process where event.code == "10" and
+  process.target.executable : "?:\\Windows\\System32\\lsass.exe" and
+  /* Focus on common access masks for memory dumping */
+  process.thread.granted_access in ("0x1fffff", "0x1410", "0x1010", "0x1438") and
+  not process.executable : (
+    "?:\\Program Files\\*.exe", 
+    "?:\\Program Files (x86)\\*.exe", 
+    "?:\\Windows\\System32\\msmpeng.exe"
+  )
