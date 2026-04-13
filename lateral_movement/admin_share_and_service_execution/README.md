@@ -26,7 +26,9 @@ This is the most common method (used by tools like **PsExec** or **Impacket’s 
 
 To detect this specific chain of events, monitor for the following telemetry:
 
-* **Detect File Drop (T1021.002):** Monitor for new executable files (`.exe`, `.dll`) being written to administrative shares like `ADMIN$` or `C$`.
-* **Detect Service Creation (T1543.003):** Log and alert on the creation of new Windows Services (Security Event ID 4697 or System Event ID 7045), especially those with suspicious binary paths.
-* **Detect Process Spawn from Services.exe (T1569.002):** Identify non-standard processes where the parent process is `services.exe`.
-* **Detect File Deletion (T1070.004):** Track the deletion of the original binary immediately following the service stop/completion, a common cleanup tactic.
+T browse for speific atomic rule, click on the headings below.
+
+* [**Detect File Drop (T1021.002)**](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_file_drop): Monitor for new executable files (`.exe`, `.dll`) being written to administrative shares like `ADMIN$` or `C$`.
+* [**Detect Service Creation (T1543.003)**](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_service_creation): Log and alert on the creation of new Windows Services (Security Event ID 4697 or System Event ID 7045), especially those with suspicious binary paths.
+* [**Detect Process Spawn from Services.exe (T1569.002)**](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_process_spwan_by_services_exe): Identify non-standard processes where the parent process is `services.exe`.
+* [**Detect File Deletion (T1070.004)**](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_file_deletion): Track the deletion of the original binary immediately following the service stop/completion, a common cleanup tactic.
