@@ -1,0 +1,30 @@
+title: Incoming WMI Lateral Movement - Process Spawn
+id: detect_wmi_process_span_t1047
+status: experimental
+description: Detects command execution via WMI by monitoring WmiPrvSE.exe spawning shells.
+author: Zeeshan Haider
+tags:
+    - attack.lateral_movement
+    - attack.t1047
+logsource:
+    product: windows
+    service: sysmon
+detection:
+    selection:
+        EventID: 1  # Sysmon: Process Creation
+        ParentImage|endswith: '\WmiPrvSE.exe'
+        Image|endswith:
+            - '\cmd.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\rundll32.exe'
+            - '\mshta.exe'
+    selection_cmd:
+        CommandLine|contains:
+            - ' -e '
+            - ' -enc '
+            - ' -encodedcommand '
+            - 'net user '
+            - ' /c '
+    condition: selection and selection_cmd
+level: high
