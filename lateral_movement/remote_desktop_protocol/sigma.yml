@@ -2,7 +2,7 @@
 title: Lateral Movement Lifecycle - Credential Theft to RDP Escalation
 description: Correlates LSASS access on one host with a subsequent RDP login and UAC bypass
     by the same user account across the environment.
-status: experimental
+status: test
 author: Zeeshan Haider
 tags:
     - attack.lateral_movement
@@ -10,9 +10,9 @@ tags:
 correlation:
     type: temporal
     rules:
-        - rule_id: 5f973059-4674-4b47-a72a-43d96924d546 # LSASS Access
-        - rule_id: 61e94474-0678-4384-934d-869f3796d8e2 # RDP Logon
-        - rule_id: 389a0595-58e9-4089-9a2d-22a8bc944f22 # UAC Bypass
+        - rule_id: detect_lsass_access_t1003.001 # LSASS Access
+        - rule_id: Detect_Successful_RDP_Logon_t1021.001 # RDP Logon
+        - rule_id: UAC_Bypass_via_Fodhelper_t1548.002 # UAC Bypass
     group-by:
         - User # The common denominator
     timespan: 30m
