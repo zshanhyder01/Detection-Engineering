@@ -1,0 +1,36 @@
+sequence by user.name with maxspan=30m
+  /* Step 1: Credential Acquisition (Machine A)
+     Detects suspicious LSASS memory access via Sysmon Event ID 10 
+  */
+  [process where event.code == "10" and
+   process.target.executable : "C:\\Windows\\System32\\lsass.exe" and
+   process.thread.granted_access in ("0x1fffff", "0x1410", "0x1010", "0x1438") and
+   not process.executable : (
+     "C:\\Program Files\\*.exe", 
+     "C:\\Program Files (x86)\\*.exe", 
+     "C:\\Windows\\System32\\msmpeng.exe"
+   )
+  ]
+
+  /* Step 2: Lateral Movement (Machine B)
+     Detects Successful RDP Login (Event ID 4624, Type 10) 
+  */
+  [iam where event.code == "4624" and 
+   winlog.logon.type == "10" and 
+   event.outcome == "success"
+  ]
+
+  /* Step 3: Execution & Privilege Escalation (Machine B)
+     Detects High-Integrity process creation (UAC Bypass) following the RDP landing.
+     MITRE T1548.002
+  */
+  [process where event.code : ("1", "4688") and
+   process.executable : (
+     "C:\\Windows\\System32\\fodhelper.exe",
+     "C:\\Windows\\System32\\computerdefaults.exe",
+     "C:\\Windows\\System32\\sdclt.exe",
+     "C:\\Windows\\System32\\eventvwr.exe"
+   ) and
+   /* Ensure we are looking for the process on the destination machine */
+   process.parent.executable : ("C:\\Windows\\explorer.exe", "C:\\Windows\\System32\\cmd.exe")
+  ]
