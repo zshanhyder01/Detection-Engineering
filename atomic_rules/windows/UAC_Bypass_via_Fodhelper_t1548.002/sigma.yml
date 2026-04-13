@@ -1,0 +1,16 @@
+title: UAC Bypass via Fodhelper
+id:     UAC_Bypass_via_Fodhelper_t1548.002
+description: Detects the execution of fodhelper.exe which is commonly used to bypass UAC.
+author: Zeeshan Haider
+tags:
+    - attack.privilege_escalation
+    - attack.t1548.002 # Bypass User Account Control
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        EventID: 1 (Sysmon) / 4688 (Windows)
+        Image|endswith: '\fodhelper.exe'
+    condition: selection
+level: high
