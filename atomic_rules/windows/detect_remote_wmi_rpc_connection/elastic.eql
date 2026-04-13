@@ -1,0 +1,5 @@
+network where event.dataset == "windows.sysmon_operational" and
+  event.code == "3" and
+  destination.port == 135 and
+  network.direction == "ingress" and
+  not source.ip : ("127.0.0.1", "::1")
