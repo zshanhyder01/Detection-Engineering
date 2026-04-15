@@ -1,13 +1,13 @@
 # Lateral Movement via WMI (Windows Management Instrumentation)
 
-## 0x01: Introduction
+## Introduction
 Windows Management Instrumentation (WMI) is a core Windows framework for managing data and operations. In the context of offensive security, WMI is a premier method for **Lateral Movement** because it is "fileless." 
 
 Unlike the SCM (PsExec) method, it does not necessarily require dropping an `.exe` onto the target’s disk to start. It leverages the operating system's own management framework to execute commands, making it highly stealthy and difficult for traditional AV to detect.
 
 ---
 
-## 0x02: Attack Flow
+## Attack Flow
 The following steps outline the lifecycle of a WMI-based lateral movement attack.
 
 ### 1. The Pre-Requisite: Administrative Credentials
@@ -33,7 +33,7 @@ This is the critical phase for detection and impact.
 
 ---
 
-## 0x03: Atomic Rules for Detection
+## Atomic Rules for Detection
 To defend against WMI lateral movement, monitor for the following "Atomic" indicators:
 
 ### Rule 1: Suspicious Parent-Child Relationship
@@ -55,7 +55,7 @@ To defend against WMI lateral movement, monitor for the following "Atomic" indic
 
 ---
 
-## 0x04: Summary Flow Table
+## Summary Flow Table
 
 | Phase | Action | Technical Detail |
 | :--- | :--- | :--- |
