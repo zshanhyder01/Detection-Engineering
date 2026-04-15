@@ -36,20 +36,12 @@ This is the critical phase for detection and impact.
 ## Atomic Rules for Detection
 To defend against WMI lateral movement, monitor for the following "Atomic" indicators:
 
-### Rule 1: Suspicious Parent-Child Relationship
+### [Rule 1: Suspicious Parent-Child Relationship and Win32_Process.Create Command Lines](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_wmi_process_span_t1047)
 * **Logic**: Monitor for `WmiPrvSE.exe` spawning shells or scripting engines.
 * **Condition**: `ParentImage == 'C:\Windows\System32\wbem\WmiPrvSE.exe'`
 * **Target Children**: `cmd.exe`, `powershell.exe`, `scrcons.exe`, `pwsh.exe`.
 
-### Rule 2: Remote WMI Network Activity
+### [Rule 2: Remote WMI Network Activity](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_remote_wmi_rpc_connection)
 * **Logic**: Detect inbound RPC traffic (Port 135) followed by a high-port DCOM connection from a workstation (rather than a known management server).
 * **Ports**: `TCP 135` and `TCP 49152-65535`.
-
-### Rule 3: Win32_Process.Create Command Lines
-* **Logic**: Inspect command-line logs for WMI-based process creation strings.
-* **Keywords**: `wmic process call create`, `Invoke-WmiMethod -ClassName Win32_Process`.
-
-### Rule 4: WMI Activity Event Logs
-* **Logic**: Monitor the WMI-Activity operational log for remote execution events.
-* **Event ID**: `Microsoft-Windows-WMI-Activity` **Event ID 5861** (indicates creation of a process via WMI).
 
