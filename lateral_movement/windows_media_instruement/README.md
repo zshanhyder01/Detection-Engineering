@@ -53,14 +53,3 @@ To defend against WMI lateral movement, monitor for the following "Atomic" indic
 * **Logic**: Monitor the WMI-Activity operational log for remote execution events.
 * **Event ID**: `Microsoft-Windows-WMI-Activity` **Event ID 5861** (indicates creation of a process via WMI).
 
----
-
-## Summary Flow Table
-
-| Phase | Action | Technical Detail |
-| :--- | :--- | :--- |
-| **1. Auth** | Credential Check | Uses stolen Admin credentials/hashes. |
-| **2. Transport** | Network Call | RPC (Port 135) → DCOM (High Ports). |
-| **3. Trigger** | Method Call | Invokes `Win32_Process.Create` method. |
-| **4. Execution** | Process Spawn | `WmiPrvSE.exe` spawns the malicious command. |
-| **5. Outcome** | SYSTEM Shell | Attacker gets a reverse shell with full privileges. |
