@@ -21,7 +21,7 @@ detection:
 
     # STEP 3 & 4: Reference Atomic Rule 2 (Execution)
     selection_execution:
-        rule_ref: wmi_execution_spawn
+        rule_ref: detect_wmi_process_span_t1047
 
     condition: selection_logon followed by selection_network followed by selection_execution
 
