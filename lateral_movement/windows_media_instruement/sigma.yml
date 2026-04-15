@@ -17,7 +17,7 @@ detection:
     
     # STEP 2: Reference Atomic Rule 1 (Transport)
     selection_network:
-        rule_ref: wmi_network_transport
+        rule_ref: detect_remote_wmi_rpc_connection_01
 
     # STEP 3 & 4: Reference Atomic Rule 2 (Execution)
     selection_execution:
