@@ -1,0 +1,19 @@
+title: Rubeus/Mimikatz Pass-the-Ticket Command Line
+id:     detect_pass_the_ticket_command_line_t1550.003
+status: test
+author: Zeeshan Haider
+description: Detects the 'ptt' or 'import' command used to inject stolen tickets.
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        CommandLine|contains:
+            - 'ptt '
+            - '/ticket:'
+            - 'kerberos::ptc'
+            - 'kerberos::ptt'
+    condition: selection
+tags:
+    - attack.lateral_movement
+    - attack.t1550.003
