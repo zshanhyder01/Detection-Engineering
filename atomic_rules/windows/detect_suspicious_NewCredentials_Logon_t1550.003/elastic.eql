@@ -1,0 +1,12 @@
+/* Title: Suspicious NewCredentials Logon (PTT Injection)
+   ID: detect_suspicious_NewCredentials_Logon_t1550.003
+   Author: Zeeshan Haider
+   Description: Detects Logon Type 9 (NewCredentials), which occurs during stealthy Pass-the-Ticket injections.
+*/
+
+authentication where event.code == "4624" and 
+  winlog.event_data.LogonType == "9" and 
+  not process.executable : (
+    "C:\\Windows\\System32\\lsass.exe", 
+    "C:\\Windows\\System32\\svchost.exe"
+  )
