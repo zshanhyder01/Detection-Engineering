@@ -1,0 +1,13 @@
+/* Title: Rubeus/Mimikatz Pass-the-Ticket Command Line
+   ID: detect_pass_the_ticket_command_line_t1550.003
+   Author: Zeeshan Haider
+   Description: Detects command line arguments used by Rubeus and Mimikatz for ticket injection.
+*/
+
+process where event.type == "start" and
+  process.command_line : (
+    "*ptt *",
+    "*/ticket:*",
+    "*kerberos::ptc*",
+    "*kerberos::ptt*"
+  )
