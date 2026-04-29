@@ -1,0 +1,13 @@
+title: Sacrificial Process for Ticket Injection
+id: d4e98f0e-d1b0-4a81-9b7d-654321098765
+status: experimental
+description: Detects a process being created with a different TargetLogonId than its subject, indicative of /createnetonly.
+logsource:
+    product: windows
+    category: process_creation # Event ID 4688
+detection:
+    selection:
+        EventID: 4688
+    condition: selection and not (SubjectLogonId == TargetLogonId)
+tags:
+    - attack.lateral_movement
