@@ -1,6 +1,7 @@
 title: Sacrificial Process for Ticket Injection
-id: d4e98f0e-d1b0-4a81-9b7d-654321098765
-status: experimental
+id:     detect_sacrificial_process_ticket_injection_T1550.003
+status: test
+author: Zeeshan Haider
 description: Detects a process being created with a different TargetLogonId than its subject, indicative of /createnetonly.
 logsource:
     product: windows
