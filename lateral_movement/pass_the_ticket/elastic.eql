@@ -1,0 +1,18 @@
+/* Title: Pass-the-Ticket Lateral Movement Chain 
+  Author: Zeeshan Haider
+  Description: Correlates ticket harvesting or injection alerts with subsequent 
+               administrative share access alerts from the same source host.
+*/
+
+sequence by host.name with maxspan=15m
+  
+  /* Phase 1 & 2: Credential Activity (Harvesting or Injection) */
+  [any where signal.rule.id : (
+    "detect_lsass_access_t1003.001",
+    "detect_pass_the_ticket_command_line_t1550.003",
+    "detect_suspicious_NewCredentials_Logon_t1550.003",
+    "detect_sacrificial_process_ticket_injection_T1550.003"
+  )]
+
+  /* Phase 3: Lateral Movement (Admin Share Access) */
+  [any where signal.rule.id == "detect_admin_share_access_t1021.002"]
