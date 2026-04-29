@@ -1,0 +1,19 @@
+title: Suspicious NewCredentials Logon (PTT Injection)
+id:     detect_suspicious_NewCredentials_Logon_t1550.003
+status: test
+Author: Zeeshan Haider
+description: Detects a Logon Type 9 (NewCredentials), often used in stealthy PTT attacks.
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 9
+        ProcessName|not_ends_with: 
+            - '\lsass.exe'
+            - '\svchost.exe'
+    condition: selection
+tags:
+    - attack.lateral_movement
+    - attack.t1550.003
