@@ -1,13 +1,9 @@
-/* Title: Rubeus/Mimikatz Pass-the-Ticket Command Line
-   ID: detect_pass_the_ticket_command_line_t1550.003
+/* Title: Sacrificial Process for Ticket Injection
+   ID: detect_sacrificial_process_ticket_injection_T1550.003
    Author: Zeeshan Haider
-   Description: Detects command line arguments used by Rubeus and Mimikatz for ticket injection.
+   Description: Detects a process created in a different logon session than its parent/subject.
 */
 
-process where event.type == "start" and
-  process.command_line : (
-    "*ptt *",
-    "*/ticket:*",
-    "*kerberos::ptc*",
-    "*kerberos::ptt*"
-  )
+process where event.code == "4688" and 
+  winlog.event_data.SubjectLogonId != winlog.event_data.TargetLogonId and
+  not winlog.event_data.TargetLogonId == "0x3e7" /* Exclude System/Service sessions */
