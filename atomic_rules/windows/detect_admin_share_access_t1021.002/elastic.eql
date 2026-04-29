@@ -1,0 +1,8 @@
+/* Title: Access to Administrative Shares (C$/ADMIN$)
+  ID: detect_admin_share_access_t1021.002
+  Author: Zeeshan Haider
+  Description: Detects successful access to hidden administrative shares on remote hosts using Event ID 5140.
+*/
+
+iam_access where event.code == "5140" and 
+  winlog.event_data.ShareName : ("\\\\*\\C$", "\\\\*\\ADMIN$")
