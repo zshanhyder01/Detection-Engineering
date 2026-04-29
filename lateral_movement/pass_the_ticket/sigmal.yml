@@ -1,0 +1,30 @@
+title: Pass-the-Ticket Lateral Movement Chain
+id:     pass_the_ticket
+status: test
+Author: Zeeshan Haider
+description: |
+  Correlates ticket harvesting or injection activities with subsequent 
+  administrative share access (C$/ADMIN$) from the same source host.
+action: correlation
+type: temporal
+rule:
+  # Reference Phase 1 & 2: The Harvest or The Injection
+  - name: credential_activity
+    conditions:
+      - rule: detect_lsass_access_t1003.001 # LSASS Memory Dumping
+      - rule: detect_pass_the_ticket_command_line_t1550.003 # Rubeus/Mimikatz ptt
+      - rule: detect_suspicious_NewCredentials_Logon_t1550.003 # Suspicious Logon Type 9
+      - rule: detect_sacrificial_process_ticket_injection_T1550.003 # Sacrificial Process
+    condition: 1 or 2 or 3 or 4
+
+  # Reference Phase 3: The Lateral Leap
+  - name: lateral_movement
+    conditions:
+      - rule: detect_admin_share_access_t1021.002 # Remote Admin Share Access
+    condition: 1
+
+# Linking the events
+group-by:
+  - ComputerName # Matches the source host across all events
+timespan: 15m
+condition: credential_activity then lateral_movement
