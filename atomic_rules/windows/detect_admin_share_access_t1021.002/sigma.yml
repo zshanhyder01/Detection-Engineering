@@ -1,0 +1,18 @@
+title: Access to Administrative Shares (C$/ADMIN$)
+id:     detect_admin_share_access_t1021.002
+status: test
+Author: Zeeshan Haider
+description: Detects successful access to hidden administrative shares on remote hosts.
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 5140 # A network share object was accessed
+        ShareName: 
+            - '\\*\C$'
+            - '\\*\ADMIN$'
+    condition: selection
+tags:
+    - attack.lateral_movement
+    - attack.t1021.002
