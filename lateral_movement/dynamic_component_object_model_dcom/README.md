@@ -38,18 +38,18 @@ A typical DCOM lateral movement attack follows this sequence:
 Detection relies on correlating three distinct atomic events within a short timeframe (usually <60s).
 
 ### Atomic Rules
-### <a name="remote-network-logon"></a>[Remote Network Logon](https://your-custom-page-link.com/remote-network-logon)
+### <a name="remote-network-logon"></a>[Remote Network Logon]([https://your-custom-page-link.com/remote-network-logon](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_remote_logon_t1021.003))
 *   **Event ID:** 4624
 *   **Logon Type:** 3 (Network)
 *   **Purpose:** Establishes that the activity originated from a remote network source.
 *   **Context:** This represents the initial authentication required to interact with DCOM objects remotely.
 
-### <a name="dcom-service-activation"></a>[DCOM Service Activation](https://your-custom-page-link.com/dcom-service-activation)
+### <a name="dcom-service-activation"></a>[DCOM Service Activation](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/dcom_activation_svchost_t1021.003)
 *   **Logic:** `ParentImage` is `svchost.exe` (DcomLaunch) and `Image` is a known DCOM host (`mmc.exe`, `excel.exe`, etc.).
 *   **Indicator:** The command line contains the `-Embedding` flag, signifying it was started as a COM server.
 *   **Context:** This confirms the system service is handing off execution to the requested application.
 
-### <a name="com-shell-execution"></a>[COM Shell Execution](https://your-custom-page-link.com/com-shell-execution)
+### <a name="com-shell-execution"></a>[COM Shell Execution]([https://your-custom-page-link.com/com-shell-execution](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_com_shell_payload_t1059))
 *   **Logic:** `ParentImage` is a DCOM host and `Image` is a shell (`cmd.exe`, `powershell.exe`).
 *   **Significance:** High-fidelity alert. Under normal conditions, MMC or Excel should not spawn command-line interpreters.
 *   **Context:** This is the execution phase where the attacker gains a remote shell.
