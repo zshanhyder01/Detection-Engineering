@@ -1,5 +1,5 @@
 title: Remote Network Logon for DCOM
-id: 4624-type3-dcom-trigger
+id: detect_remote_logon_t1021.003
 name: remote_logon
 status: test
 description: Detects a successful network logon (Type 3) required for remote DCOM interaction.
