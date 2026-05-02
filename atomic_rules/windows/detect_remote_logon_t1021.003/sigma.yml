@@ -1,0 +1,19 @@
+title: Remote Network Logon for DCOM
+id: 4624-type3-dcom-trigger
+name: remote_logon
+status: test
+description: Detects a successful network logon (Type 3) required for remote DCOM interaction.
+author: Zeeshan Haider
+tags:
+    - attack.lateral_movement          # Tactic: Lateral Movement
+    - attack.t1021.003                 # Technique: Remote Services: Distributed COM
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 3 
+    filter:
+        TargetUserName|endswith: '$' 
+    condition: selection
