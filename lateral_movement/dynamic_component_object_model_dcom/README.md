@@ -1,7 +1,5 @@
 # Lateral Movement via DCOM: Analysis and Detection
 
-This repository contains a comprehensive breakdown, attack flow, and detection logic for **Lateral Movement via Distributed Component Object Model (DCOM)**. It is designed for SOC Analysts and Detection Engineers to understand and defend against this common "Living off the Land" technique.
-
 ---
 
 ## 1. Introduction
@@ -48,15 +46,15 @@ Detection relies on correlating three distinct atomic events within a short time
 
 ---
 
-### <a name="ar-01"></a>AR-01: Remote Network Logon
+### <a name="ar-01"></a>Remote Network Logon
 *   **Logic:** Event ID **4624** + **Logon Type 3**.
 *   **Purpose:** Confirms a remote connection was established before the process activity started.
 
-### <a name="ar-02"></a>AR-02: DCOM Service Activation
+### <a name="ar-02"></a>DCOM Service Activation
 *   **Logic:** `ParentImage == svchost.exe` spawning `Image == mmc.exe` (or `excel.exe`).
 *   **Key Indicator:** Command line must contain `-Embedding` and Parent Command Line contains `DcomLaunch`.
 
-### <a name="ar-03"></a>AR-03: COM Object Shell Execution
+### <a name="ar-03"></a>COM Object Shell Execution
 *   **Logic:** `ParentImage == mmc.exe` spawning `Image == cmd.exe` or `powershell.exe`.
 *   **Purpose:** This is the high-fidelity alert. Legitimate DCOM host apps rarely spawn shells.
 
