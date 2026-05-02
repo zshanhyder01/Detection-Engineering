@@ -1,6 +1,6 @@
 title: Correlation - Chained Lateral Movement via DCOM
 id: dcom-full-chain-correlation
-description: |
+description: | 
     Correlates Network Logon (Lateral Movement), DCOM Host Activation, 
     and anomalous Shell Execution on the same host within 60s.
 author: Zeeshan Haider
@@ -10,9 +10,9 @@ tags:
 action: correlation
 type: temporal
 rules:
-    - remote_logon      
-    - dcom_activation   
-    - com_shell_exec    
+    - detect_remote_logon_t1021.003 
+    - dcom_activation_svchost_t1021.003
+    - detect_com_shell_payload_t1059
 group-by:
     - ComputerName
     - User
