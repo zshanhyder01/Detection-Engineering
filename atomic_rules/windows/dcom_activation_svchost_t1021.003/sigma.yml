@@ -1,7 +1,7 @@
 title: DCOM Service Activation
 id: dcom_activation_svchost_t1021.003
 name: dcom_activation
-status: experimental
+status: test
 description: Detects the DCOM service (svchost) launching a host application via DcomLaunch.
 author: Zeeshan Haider
 tags:
