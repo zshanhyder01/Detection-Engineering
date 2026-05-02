@@ -38,11 +38,19 @@ A typical DCOM lateral movement attack follows this sequence:
 Detection relies on correlating three distinct atomic events within a short timeframe (usually <60s).
 
 ### Atomic Rules
-| ID | Rule Name | MITRE ATT&CK | Description |
-| :--- | :--- | :--- | :--- |
-| **[AR-01](#ar-01-remote-network-logon)** | **Remote Network Logon** | [T1021.003](https://attack.mitre.org/techniques/T1021/003/) | Detects the initial Type 3 logon. |
-| **[AR-02](#ar-02-dcom-service-activation)** | **DCOM Service Activation** | [T1021.003](https://attack.mitre.org/techniques/T1021/003/) | Detects the spawning of the COM server. |
-| **[AR-03](#ar-03-com-object-shell-execution)** | **COM Shell Execution** | [T1059](https://attack.mitre.org/techniques/T1059/) | Detects the final payload execution. |
+
+### <a name="remote-network-logon"></a>Remote Network Logon
+*   **Event ID:** 4624
+*   **Logon Type:** 3 (Network)
+*   **Purpose:** Establishes that the activity originated from a remote network source.
+
+### <a name="dcom-service-activation"></a>DCOM Service Activation
+*   **Logic:** `ParentImage` is `svchost.exe` (DcomLaunch) and `Image` is a known DCOM host (`mmc.exe`, `excel.exe`, etc.).
+*   **Indicator:** The command line contains the `-Embedding` flag, signifying it was started as a COM server.
+
+### <a name="com-shell-execution"></a>COM Shell Execution
+*   **Logic:** `ParentImage` is a DCOM host and `Image` is a shell (`cmd.exe`, `powershell.exe`).
+*   **Significance:** High-fidelity alert. Under normal conditions, MMC or Excel should not spawn command-line interpreters.
 
 ---
 
