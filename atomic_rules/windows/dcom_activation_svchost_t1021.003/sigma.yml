@@ -1,0 +1,23 @@
+title: DCOM Service Activation
+id: dcom_activation_svchost_t1021.003
+name: dcom_activation
+status: experimental
+description: Detects the DCOM service (svchost) launching a host application via DcomLaunch.
+author: Zeeshan Haider
+tags:
+    - attack.lateral_movement          # Tactic: Lateral Movement
+    - attack.t1021.003                 # Technique: Remote Services: Distributed COM
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: '\svchost.exe'
+        ParentCommandLine|contains: 'DcomLaunch'
+        Image|endswith:
+            - '\mmc.exe'
+            - '\excel.exe'
+            - '\powerpnt.exe'
+            - '\outlook.exe'
+        CommandLine|contains: '-Embedding'
+    condition: selection
