@@ -38,34 +38,21 @@ A typical DCOM lateral movement attack follows this sequence:
 Detection relies on correlating three distinct atomic events within a short timeframe (usually <60s).
 
 ### Atomic Rules
-
-### <a name="remote-network-logon"></a>Remote Network Logon
+### <a name="remote-network-logon"></a>[Remote Network Logon](https://your-custom-page-link.com/remote-network-logon)
 *   **Event ID:** 4624
 *   **Logon Type:** 3 (Network)
 *   **Purpose:** Establishes that the activity originated from a remote network source.
+*   **Context:** This represents the initial authentication required to interact with DCOM objects remotely.
 
-### <a name="dcom-service-activation"></a>DCOM Service Activation
+### <a name="dcom-service-activation"></a>[DCOM Service Activation](https://your-custom-page-link.com/dcom-service-activation)
 *   **Logic:** `ParentImage` is `svchost.exe` (DcomLaunch) and `Image` is a known DCOM host (`mmc.exe`, `excel.exe`, etc.).
 *   **Indicator:** The command line contains the `-Embedding` flag, signifying it was started as a COM server.
+*   **Context:** This confirms the system service is handing off execution to the requested application.
 
-### <a name="com-shell-execution"></a>COM Shell Execution
+### <a name="com-shell-execution"></a>[COM Shell Execution](https://your-custom-page-link.com/com-shell-execution)
 *   **Logic:** `ParentImage` is a DCOM host and `Image` is a shell (`cmd.exe`, `powershell.exe`).
 *   **Significance:** High-fidelity alert. Under normal conditions, MMC or Excel should not spawn command-line interpreters.
-
----
-
-### <a name="ar-01"></a>Remote Network Logon
-*   **Logic:** Event ID **4624** + **Logon Type 3**.
-*   **Purpose:** Confirms a remote connection was established before the process activity started.
-
-### <a name="ar-02"></a>DCOM Service Activation
-*   **Logic:** `ParentImage == svchost.exe` spawning `Image == mmc.exe` (or `excel.exe`).
-*   **Key Indicator:** Command line must contain `-Embedding` and Parent Command Line contains `DcomLaunch`.
-
-### <a name="ar-03"></a>COM Object Shell Execution
-*   **Logic:** `ParentImage == mmc.exe` spawning `Image == cmd.exe` or `powershell.exe`.
-*   **Purpose:** This is the high-fidelity alert. Legitimate DCOM host apps rarely spawn shells.
-
+*   **Context:** This is the execution phase where the attacker gains a remote shell.
 ---
 
 ## 5. Mitigation & Prevention
