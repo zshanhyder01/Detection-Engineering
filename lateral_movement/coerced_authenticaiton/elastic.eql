@@ -1,0 +1,12 @@
+sequence by source.ip with maxspan=1m
+  /* 
+     Step 1: Reference Alert from Rule 1 
+     Trigger: Spooler Coercion Outbound
+  */
+  [signal where kibana.alert.rule.id == "detect_print_spooler_outbound_connection_t1210"]
+
+  /* 
+     Step 2: Reference Alert from Rule 2 
+     Trigger: Machine Account Logon (Relay Success)
+  */
+  [signal where kibana.alert.rule.id == "detect_Network_Logon_via_Machine_Account_t1078.002"]
