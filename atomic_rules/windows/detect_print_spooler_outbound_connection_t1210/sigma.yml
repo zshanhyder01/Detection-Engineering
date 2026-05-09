@@ -1,0 +1,27 @@
+title: Outbound Network Connection via Print Spooler (Coercion Trigger)
+id: 56930f35-97e3-490b-93f4-34e8f7736657
+status: experimental
+description: Detects the Print Spooler service making outbound network connections, a sign of PrinterBug (MS-RPRN) coercion.
+author: Zeeshan Haider
+logsource:
+    product: windows
+    category: network_connection
+detection:
+    selection:
+        EventID: 3  # Sysmon Network Connection
+        Image|endswith: '\spoolsv.exe'
+    filter:
+        DestinationIp:
+            - '127.0.0.1'
+            - '::1'
+    condition: selection and not filter
+fields:
+    - EventID
+    - Image
+    - DestinationIp
+falsepositives:
+    - Dedicated Print Servers communicating with networked printers.
+tags:
+    - attack.lateral_movement
+    - attack.t1210  # Exploitation of Remote Services
+level: high
