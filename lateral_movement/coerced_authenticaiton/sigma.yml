@@ -1,0 +1,20 @@
+title: Correlation of Coerced Authentication and Machine Account Relay
+id:     coerced_authenticaiton
+status: experimental
+description: |
+    Correlates a protocol coercion trigger (e.g., PrinterBug/MS-RPRN) with a 
+    subsequent Machine Account network logon. This represents the full 
+    attack flow from coercion to successful identity relay.
+author: Zeeshan Haider
+date: 2026/05/10
+# Reference the IDs of your Atomic Rules
+action: correlation
+type: temporal
+rules:
+    - detect_print_spooler_outbound_connection_t1210 # Rule 1: Spooler Network Connection
+    - detect_Network_Logon_via_Machine_Account_t1078.002 # Rule 2: Machine Account Logon
+group-by:
+    - destination.ip # The Attacker IP that received the 'Whistle' and then performed the 'Logon'
+timespan: 1m
+condition: 1 then 2
+level: critical
