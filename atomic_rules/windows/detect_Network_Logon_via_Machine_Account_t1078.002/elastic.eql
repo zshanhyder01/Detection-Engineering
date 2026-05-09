@@ -1,0 +1,16 @@
+authentication where host.os.type == "windows" and
+  /* Event ID 4624: Successful Logon */
+  event.outcome == "success" and
+  
+  /* Logon Type 3: Network */
+  winlog.event_data.LogonType == "3" and
+  
+  /* Target user is a Machine Account (Ends with $) */
+  user.name : "*$" and
+  
+  /* Exclude local loopback traffic */
+  not source.ip : ("127.0.0.1", "::1") and
+  
+  /* Optional: Filter out common noise from Domain Controllers 
+     if they are known to perform frequent machine logons */
+  not user.name : ("ANONYMOUS LOGON", "MSOL_*")
