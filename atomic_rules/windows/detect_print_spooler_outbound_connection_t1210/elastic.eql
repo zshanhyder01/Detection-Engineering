@@ -1,0 +1,18 @@
+network where host.os.type == "windows" and
+  /* Event ID 3 equivalent: network connection started */
+  event.type == "start" and
+  
+  /* The "Whistle" Process */
+  process.name : "spoolsv.exe" and
+  
+  /* The "Forced Walk": Filter out local/loopback traffic */
+  not destination.ip : ("127.0.0.1", "::1") and
+  
+  /* Focus on common coercion ports (SMB/RPC) though any outbound is suspicious */
+  destination.port : (445, 135, 139) and
+
+  /* Ignore connections to known Domain Controllers if necessary */
+  /* not destination.ip : "10.0.0.1" */
+  
+  /* Ensure the process is running as the Boss (SYSTEM) */
+  user.id : "S-1-5-18"
