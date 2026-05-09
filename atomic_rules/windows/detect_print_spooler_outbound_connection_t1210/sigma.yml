@@ -1,5 +1,5 @@
-title: Outbound Network Connection via Print Spooler (Coercion Trigger)
-id: 56930f35-97e3-490b-93f4-34e8f7736657
+title: Outbound Network Connection via Print Spooler
+id: detect_print_spooler_outbound_connection_t1210
 status: experimental
 description: Detects the Print Spooler service making outbound network connections, a sign of PrinterBug (MS-RPRN) coercion.
 author: Zeeshan Haider
