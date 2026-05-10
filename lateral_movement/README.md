@@ -24,14 +24,12 @@ For a detailed understanding of lateral movement techniques and adversary behavi
 ### Techniques Covered in This Repository
 
 The following lateral movement techniques are covered in this section:
-
-1. **Admin Share via SCM (Service Control Manager)**
-   - Remote service creation using administrative shares (e.g., `ADMIN$`)
-   - Commonly associated with PsExec-style execution  
-
-2. **Remote Desktop Protocol (RDP)**
-   - Interactive remote logins using valid credentials  
-   - Often used after credential compromise  
+1. [SMB Admin Shares & Service Control Manager (SCM)](https://github.com/zshanhyder01/Detection-Engineering/tree/main/lateral_movement/admin_share_and_service_execution)
+2. [Coerced Authentication & NTLM Relay Detection](https://github.com/zshanhyder01/Detection-Engineering/tree/main/lateral_movement/coerced_authenticaiton)
+3. [Lateral Movement via DCOM](https://github.com/zshanhyder01/Detection-Engineering/tree/main/lateral_movement/dynamic_component_object_model_dcom)
+4. [Pass-the-Ticket](https://github.com/zshanhyder01/Detection-Engineering/tree/main/lateral_movement/pass_the_ticket)
+5. [Remote Desktop Protocol](https://github.com/zshanhyder01/Detection-Engineering/tree/main/lateral_movement/pass_the_ticket)
+6. [Windows Management Instrumentation](https://github.com/zshanhyder01/Detection-Engineering/tree/main/lateral_movement/windows_media_instruement)
 
 ---
 
