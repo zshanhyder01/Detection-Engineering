@@ -1,4 +1,4 @@
-# Coerced Authentication & NTLM Relay Detection
+# Coerced Authentication
 
 ## What is Coerced Authentication?
 
