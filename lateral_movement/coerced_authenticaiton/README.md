@@ -75,6 +75,6 @@ The process can be visualized as a sequence of "The Whistle," "The Reflex," and 
 
 To effectively catch this behavior, we utilize a tiered detection strategy:
 
-*   **[Rule 1 (Atomic):](./rules/atomic/rule_1_spooler_outbound.md)** Detects the "Whistle" by monitoring for unusual outbound network connections from the Print Spooler (`spoolsv.exe`) or LSASS.
+*   **[Rule 1 (Atomic):]([./rules/atomic/rule_1_spooler_outbound.md](https://github.com/zshanhyder01/Detection-Engineering/tree/main/atomic_rules/windows/detect_print_spooler_outbound_connection_t1210))** Detects the "Whistle" by monitoring for unusual outbound network connections from the Print Spooler (`spoolsv.exe`) or LSASS.
 *   **[Rule 2 (Atomic):](./rules/atomic/rule_2_machine_account_logon.md)** Detects the "Badge Presentation" by monitoring for successful `Logon Type 3` events using a Machine Account (`$`).
 *   **[Rule 3 (Correlation):](./rules/correlation/rule_3_coerced_auth_relay.md)** Links Rule 1 and Rule 2 together using a stateful sequence to confirm the full attack flow with high confidence.
