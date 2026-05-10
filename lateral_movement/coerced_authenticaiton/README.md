@@ -1,9 +1,5 @@
 # Coerced Authentication & NTLM Relay Detection
 
-This repository contains Atomic and Correlation rules (Sigma and Elastic EQL) designed to detect **Coerced Authentication** attacks used for lateral movement within Windows environments.
-
----
-
 ## What is Coerced Authentication?
 
 **Coerced Authentication** occurs when an attacker forces a high-privileged process (usually the **SYSTEM** account) on a remote server to authenticate to an attacker-controlled machine. 
@@ -43,9 +39,4 @@ To effectively catch this behavior, we utilize a tiered detection strategy:
 *   **Rule 1 (Atomic):** Detects the "Whistle" by monitoring for unusual outbound network connections from the Print Spooler (`spoolsv.exe`) or LSASS.
 *   **Rule 2 (Atomic):** Detects the "Badge Presentation" by monitoring for successful `Logon Type 3` events using a Machine Account (`$`).
 *   **Rule 3 (Correlation):** Links Rule 1 and Rule 2 together using a stateful sequence to confirm the full attack flow with high confidence.
-
----
-
-### How to Use
-1. Deploy the **Atomic Rules** to alert on individual suspicious behaviors.
 2. Implement the **Correlation Rule** in your SIEM (Elastic/Sigma) to reduce alert fatigue and identify confirmed lateral movement pivots.
