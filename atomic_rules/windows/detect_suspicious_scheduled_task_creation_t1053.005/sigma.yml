@@ -1,0 +1,42 @@
+title: Suspicious Scheduled Task Creation
+id: detect_suspicious_scheduled_task_creation_t1053.005
+status: test
+description: Detects the creation of scheduled tasks that point to suspicious paths or involve common LotL binaries.
+author: Zeeshan Haider
+date: 2026-06-10
+logsource:
+    product: windows
+    service: security
+detection:
+    selection_eid:
+        EventID: 4698
+    selection_paths:
+        TaskContent|contains:
+            - '\AppData\Local\Temp\'
+            - '\AppData\Roaming\'
+            - '\Users\Public\'
+            - '\WINDOWS\Temp\'
+            - 'C:\Temp\'
+            - '\Desktop\'
+            - '\Downloads\'
+            - 'C:\ProgramData\'
+    selection_commands:
+        TaskContent|contains:
+            - 'regsvr32'
+            - 'rundll32'
+            - 'cmd.exe'
+            - 'powershell'
+            - 'pwsh'
+            - 'mshta'
+            - 'wscript'
+            - 'cscript'
+            - 'certutil'
+            - 'bitsadmin'
+            - 'wmic'
+    condition: selection_eid and (selection_paths or selection_commands)
+falsepositives:
+    - Legitimate software installers (e.g., updaters) running from ProgramData or AppData.
+level: high
+tags:
+    - attack.persistence
+    - attack.t1053.005
