@@ -1,3 +1,20 @@
-/* Elastic EQL Query */
-any where event.dataset == "windows.system" and
-  event.code == "7045"
+system where event.code == "7045" and 
+  (
+    winlog.event_data.ImagePath : (
+      "*\\AppData\\Local\\Temp\\*",
+      "*\\AppData\\Roaming\\*",
+      "*\\Users\\Public\\*",
+      "*\\Windows\\Temp\\*",
+      "*C:\\Temp\\*",
+      "*\\Desktop\\*",
+      "*\\Downloads\\*",
+      "*C:\\ProgramData\\*"
+    ) or 
+    winlog.event_data.ServiceName : (
+      "*backdoor*",
+      "*malware*",
+      "*hack*",
+      "*temp*",
+      "*test*"
+    )
+  )
