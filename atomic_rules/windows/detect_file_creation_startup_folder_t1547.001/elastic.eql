@@ -1,0 +1,6 @@
+file where event.code == "11" and 
+  file.path : (
+    "*\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*",
+    "*\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp\\*"
+  ) and not 
+  file.extension : ("ini", "tmp", "db")
