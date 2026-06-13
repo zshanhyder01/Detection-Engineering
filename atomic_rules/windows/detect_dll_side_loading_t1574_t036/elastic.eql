@@ -1,0 +1,43 @@
+library where
+
+  /* -----------------------------------------------------------------------
+     1. Event scope — Sysmon Event ID 7 / Elastic image_load
+     ----------------------------------------------------------------------- */
+  event.code == "7" and
+
+  /* -----------------------------------------------------------------------
+     2. DLL loaded from a user-writable / non-standard location
+     ----------------------------------------------------------------------- */
+  (
+    dll.path like~ "*\\AppData\\Local\\Temp\\*"  or
+    dll.path like~ "*\\AppData\\Roaming\\*"      or
+    dll.path like~ "*\\Users\\Public\\*"         or
+    dll.path like~ "*\\ProgramData\\*"           or
+    dll.path like~ "*\\Downloads\\*"             or
+    dll.path like~ "*\\Desktop\\*"               or
+    dll.path like~ "*\\Temp\\*"                  or
+    dll.path like~ "*\\Windows\\Temp\\*"
+  ) and
+
+  /* -----------------------------------------------------------------------
+     3. Loading process is a legitimately signed System32/SysWOW64 binary
+     ----------------------------------------------------------------------- */
+  (
+    process.executable like~ "C:\\Windows\\System32\\*" or
+    process.executable like~ "C:\\Windows\\SysWOW64\\*"
+  ) and
+  process.code_signature.status == "trusted" and
+
+  /* -----------------------------------------------------------------------
+     4. DLL itself is NOT signed — the planted malicious payload
+     ----------------------------------------------------------------------- */
+  dll.code_signature.trusted != true and
+
+  /* -----------------------------------------------------------------------
+     FILTERS — Suppress known false positives
+     ----------------------------------------------------------------------- */
+  not (
+    dll.path like~ "*\\ProgramData\\Microsoft\\Windows Defender\\*" or
+    dll.path like~ "*\\ProgramData\\Microsoft\\Windows\\WER\\*"     or
+    dll.path like~ "*\\Windows\\Temp\\MpCmdRun*"
+  )
