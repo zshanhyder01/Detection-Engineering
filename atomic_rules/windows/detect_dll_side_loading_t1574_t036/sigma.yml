@@ -1,0 +1,84 @@
+title: detect_dll_side_loading_t1574_t036
+id: detect_dll_side_loading_t1574_t036
+status: test
+description: >
+  Detects DLL side-loading attempts where a legitimately signed Windows system
+  binary (from System32 or SysWOW64) loads an unsigned DLL from a user-writable
+  or non-standard directory. Attackers plant malicious DLLs in writable locations
+  and abuse trusted signed binaries to load them, achieving persistence, privilege
+  escalation, and defense evasion without triggering application whitelisting controls.
+author: Zeeshan Haider
+date: 2026-06-13
+references:
+    - https://attack.mitre.org/techniques/T1574/001/
+    - https://hijacklibs.net
+
+logsource:
+    product: windows
+    category: image_load
+
+detection:
+    selection_eid:
+        EventID: 7
+
+    selection_suspicious_path:
+        ImageLoaded|contains:
+            - '\AppData\Local\Temp\'
+            - '\AppData\Roaming\'
+            - '\Users\Public\'
+            - '\ProgramData\'
+            - '\Downloads\'
+            - '\Desktop\'
+            - '\Temp\'
+            - '\Windows\Temp\'
+
+    # Loader must be a signed Windows binary — catches notepad, calc, ANY system binary
+    selection_signed_loader:
+        Image|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Windows\SysWOW64\'
+        ImageSignatureStatus: 'Valid'
+
+    # DLL itself is NOT signed — the planted payload
+    selection_unsigned_dll:
+        Signed: 'false'
+
+    # Filter out known noisy but legitimate cases
+    filter_legit_windows:
+        ImageLoaded|contains:
+            - '\ProgramData\Microsoft\Windows Defender\'
+            - '\ProgramData\Microsoft\Windows\WER\'
+            - '\Windows\Temp\MpCmdRun'
+
+    condition: >
+        selection_eid
+        and selection_suspicious_path
+        and selection_signed_loader
+        and selection_unsigned_dll
+        and not filter_legit_windows
+
+falsepositives:
+    - Legitimate software extracting unsigned DLLs to Temp during installation
+    - Poorly packaged enterprise software deploying unsigned DLLs to writable paths
+    - Some Windows built-in processes that load unsigned helper DLLs by design
+
+level: high
+
+tags:
+    - attack.persistence
+    - attack.privilege_escalation
+    - attack.defense_evasion
+    - attack.t1574.001        # DLL Side-Loading
+    - attack.t1574.002        # DLL Search Order Hijacking
+    - attack.t1036.001        # Masquerading: Invalid Code Signature
+
+fields:
+    - Image
+    - ImageLoaded
+    - ProcessId
+    - User
+    - Signed
+    - Signature
+    - SignatureStatus
+    - ImageSignatureStatus
+    - Hashes
