@@ -1,16 +1,38 @@
-title: Service Creation Detected (Baseline)
-id: Ltm_10042026_2
+title: detect_service_creation_t1543.003
+id: detect_service_creation_t1543.003
 status: test
-description: Detects all Windows service creation events (Event ID 7045)
-author: Zeeshan
+description: Detects the installation of a new service pointing to suspicious paths or using uncommon service names.
+author: Zeeshan Haider
+date: 2026-06-13
 logsource:
-  product: windows
-  service: system
+    product: windows
+    service: system
 detection:
-  selection:
-    EventID: 7045
-  condition: selection
-level: low
+    selection_eid:
+        EventID: 7045
+    selection_paths:
+        ImagePath|contains:
+            - '\AppData\Local\Temp\'
+            - '\AppData\Roaming\'
+            - '\Users\Public\'
+            - '\Windows\Temp\'
+            - 'C:\Temp\'
+            - '\Desktop\'
+            - '\Downloads\'
+            - 'C:\ProgramData\'
+    # Often, attackers use random strings for service names
+    selection_name:
+        ServiceName|contains:
+            - 'backdoor'
+            - 'malware'
+            - 'hack'
+            - 'temp'
+            - 'test'
+    condition: selection_eid and (selection_paths or selection_name)
+falsepositives:
+    - Legitimate software installers that create temporary services for installation (usually have short lifetimes).
+    - Administrative tools or IT automation agents.
+level: medium
 tags:
-  - attack.persistence
-- attack.t1543
+    - attack.persistence
+    - attack.t1543.003
