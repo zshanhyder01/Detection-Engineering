@@ -1,0 +1,26 @@
+title: detect_file_creation_startup_folder_t1547.001
+id: detect_file_creation_startup_folder_t1547.001
+status: test
+description: Detects the creation of files in the Windows startup directories.
+author: Zeehshan Haider
+date: 2026-06-13
+logsource:
+    product: windows
+    category: file_event
+detection:
+    selection_eid:
+        EventID: 11 # Sysmon FileCreate
+    selection_paths:
+        TargetFilename|contains:
+            - '\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\'
+            - '\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\'
+    # We ignore standard files that might naturally appear here
+    filter_extensions:
+        TargetFilename|endswith:
+            - '.ini'
+            - '.tmp'
+    condition: selection_eid and selection_paths and not filter_extensions
+level: medium
+tags:
+    - attack.persistence
+    - attack.t1547.001
