@@ -1,0 +1,24 @@
+title: detect_WMI_Event_Subscription_Persistence_t1546.003
+id: detect_WMI_Event_Subscription_Persistence_t1546.003
+status: test
+description: Detects the creation of WMI event subscriptions, often used for fileless persistence.
+author: Zeeshan Haider
+date: 2026-06-13
+logsource:
+    product: windows
+    category: wmi_activity
+detection:
+    # Sysmon Event ID 19 (Filter), 20 (Consumer), 21 (Binding)
+    selection_eid:
+        EventID:
+            - 19
+            - 20
+            - 21
+    # Detects common malicious consumers like CommandLineEventConsumer
+    selection_consumer:
+        ConsumerType|contains: 'CommandLineEventConsumer'
+    condition: selection_eid and selection_consumer
+level: high
+tags:
+    - attack.persistence
+    - attack.t1546.003
