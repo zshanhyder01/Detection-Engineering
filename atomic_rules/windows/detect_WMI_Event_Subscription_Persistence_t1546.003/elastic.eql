@@ -1,0 +1,9 @@
+/* Look for Sysmon events 19, 20, 21 indicating WMI subscription creation */
+registry where event.code : ("19", "20", "21") and
+  (
+    winlog.event_data.ConsumerType : "*CommandLineEventConsumer*" or
+    winlog.event_data.Query : (
+      "*SELECT * FROM __InstanceModificationEvent*",
+      "*SELECT * FROM __InstanceCreationEvent*"
+    )
+  )
