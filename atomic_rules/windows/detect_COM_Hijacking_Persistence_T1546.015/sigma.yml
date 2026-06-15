@@ -1,0 +1,27 @@
+title: detect_COM_Hijacking_Persistence_T1546.015
+id: detect_COM_Hijacking_Persistence_T1546.015
+status: test
+description: Detects the creation or modification of COM object registry keys (CLSID) in the Current User hive, which can be used to hijack COM objects for persistence.
+author: Zeeshan Haider
+date: 2026-06-15
+logsource:
+    product: windows
+    category: registry_event
+detection:
+    selection_eid:
+        EventID:
+            - 12 # RegistryEvent (Object creation)
+            - 13 # RegistryEvent (Value Set)
+    selection_paths:
+        TargetObject|contains:
+            - 'HKCU\Software\Classes\CLSID\'
+            - 'HKCU\Software\Classes\CLSID\{'
+    # Filter out known benign modifications if necessary
+    # Note: COM Hijacking is very high-fidelity in HKCU
+    condition: selection_eid and selection_paths
+level: high
+mitre_attack:
+    - T1546.015 # Component Object Model Hijacking
+tags:
+    - attack.persistence
+    - attack.privilege_escalation
