@@ -1,0 +1,36 @@
+title: Suspicious Process Initiating Network Connection
+id: Detect_Suspicious_Process_ Initiating_Network_Connection_t1071_t1059
+status: test
+description: Detects network connections made by non-browser, high-risk processes, indicating potential C2 activity.
+author: Zeeshan Haider
+tags:
+    - attack.tactic.command_and_control
+    - attack.technique.t1071
+    - attack.technique.t1059
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        EventID: 3
+        Image|endswith:
+            - '\powershell.exe'
+            - '\cmd.exe'
+            - '\wscript.exe'
+            - '\rundll32.exe'
+            - '\certutil.exe'
+            - '\bitsadmin.exe'
+            - '\curl.exe'
+    filter_browser:
+        Image|endswith:
+            - '\chrome.exe'
+            - '\firefox.exe'
+            - '\msedge.exe'
+    condition: selection and not filter_browser
+level: medium
+mitre_attck_mapping:
+    tactic:
+        - TA0011 # Command and Control
+    technique:
+        - T1071  # Application Layer Protocol
+        - T1059  # Command and Scripting Interpreter
