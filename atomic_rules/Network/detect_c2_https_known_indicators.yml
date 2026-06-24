@@ -1,0 +1,146 @@
+title: C2 Communication Over HTTPS - Known Indicators
+id: detect_c2_https_known_indicators
+status: test
+description: |
+  Detects potential Command and Control (C2) communication over HTTPS by identifying:
+  - Connections to known C2 domains and IP addresses
+  - Non-standard HTTPS ports associated with C2
+  - Suspicious certificate characteristics
+  This is designed to catch known C2 infrastructure.
+author: Zeeshan Haider
+date: 2026/06/25
+
+logsource:
+  product: network
+  service: proxy
+  category: web_proxy
+
+detection:
+  # Selection 1: Connection to known C2 domains
+  selection_c2_domains:
+    destination.domain:
+      - 'c2.example.com'
+      - 'command.malware.io'
+      - 'beacon.evil.net'
+      - 'malware-c2.com'
+    network.protocol: 'https'
+
+  # Selection 2: Connection to known C2 IP addresses
+  selection_c2_ips:
+    destination.ip:
+      - '192.0.2.1'
+      - '192.0.2.5'
+      - '203.0.113.0/24'
+    network.protocol: 'https'
+
+  # Selection 3: Non-standard HTTPS ports (commonly used for C2)
+  selection_nonstandard_https:
+    destination.port:
+      - 8443
+      - 4443
+      - 9443
+      - 1443
+      - 2443
+      - 3443
+      - 5443
+      - 6443
+      - 7443
+    network.protocol: 'https'
+    source.ip|cidr:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+
+  # Selection 4: Suspicious certificate indicators
+  selection_suspicious_certs:
+    destination.port: 443
+    network.protocol: 'https'
+    tls.certificate.subject|contains:
+      - 'malware'
+      - 'trojan'
+    tls.certificate.issuer_dn|contains:
+      - 'test'
+      - 'self'
+
+  # Selection 5: Outbound to external IPs on port 443 with small bytes
+  selection_beacon_pattern:
+    destination.port: 443
+    network.protocol: 'https'
+    network.bytes_out|lt: 1024
+    network.bytes_in|lt: 5120
+    source.ip|cidr:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+    destination.ip|cidr:
+      - '!10.0.0.0/8'
+      - '!172.16.0.0/12'
+      - '!192.168.0.0/16'
+
+  # Filter: Exclude legitimate services
+  filter_microsoft:
+    destination.domain|endswith:
+      - '.microsoft.com'
+      - '.windows.net'
+      - '.azure.com'
+      - '.office.com'
+
+  filter_google:
+    destination.domain|endswith:
+      - '.google.com'
+      - '.googleapis.com'
+      - '.gstatic.com'
+
+  filter_apple:
+    destination.domain|endswith:
+      - '.apple.com'
+      - '.icloud.com'
+
+  filter_cloud:
+    destination.domain|endswith:
+      - '.cloudflare.com'
+      - '.akamai.com'
+      - '.amazon.com'
+      - '.aws.com'
+      - '.fastly.net'
+
+  filter_vpn:
+    destination.domain|contains:
+      - 'vpn'
+      - 'proxy'
+
+  # Main condition: Any C2 indicator AND not from legitimate services
+  condition: (selection_c2_domains or selection_c2_ips or selection_nonstandard_https or selection_suspicious_certs or selection_beacon_pattern) and not (filter_microsoft or filter_google or filter_apple or filter_cloud or filter_vpn)
+
+fields:
+  - source.ip
+  - source.port
+  - destination.ip
+  - destination.port
+  - destination.domain
+  - network.protocol
+  - network.bytes_in
+  - network.bytes_out
+  - tls.certificate.subject
+  - http.request.user_agent
+
+falsepositives:
+  - Legitimate HTTPS traffic on non-standard ports
+  - Internal security testing and red team exercises
+  - VPN/proxy appliances with HTTPS beaconing
+  - Development environments using self-signed certificates
+  - Legitimate security tools scanning on HTTPS
+
+level: high
+references:
+  - https://attack.mitre.org/techniques/T1071/001/
+  - https://attack.mitre.org/techniques/T1573/002/
+  - https://attack.mitre.org/techniques/T1071/
+  - https://attack.mitre.org/techniques/T1095/
+
+tags:
+  - attack.command_and_control
+  - attack.t1071
+  - attack.t1071.001
+  - attack.t1573
+  - attack.t1573.002
