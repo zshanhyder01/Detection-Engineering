@@ -1,11 +1,11 @@
 title: detect_C2_Frequent_Small_Requests_to_External_HTTPS
 id: detect_C2_Frequent_Small_Requests_to_External_HTTPS
-status: experimental
+status: Test
 description: |
   Atomic rule that detects a SINGLE connection with characteristics of C2 beaconing.
   Matches when an internal host makes small HTTP/HTTPS requests to external server.
   This is meant to be combined with other atomic rules via correlation.
-author: Security Team
+author: Zeeshan Haider
 date: 2026/06/25
 modified: 2026/06/25
 
