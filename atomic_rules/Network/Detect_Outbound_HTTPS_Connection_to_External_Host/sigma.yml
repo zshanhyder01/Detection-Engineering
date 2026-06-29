@@ -1,10 +1,12 @@
-title: C2 Frequent Small Requests to External HTTPS
-id: detect_C2_Frequent_Small_Requests_to_External_HTTPS 
+title: Detect_Outbound_HTTPS_Connection_to_External_Host
+name: internal_outbound_https
+id: Detect_Outbound_HTTPS_Connection_to_External_Host
 status: test
 description: |
-  Atomic rule that detects a SINGLE small HTTPS request from an internal host
-  to an external server. Designed to be combined with other atomic rules via
-  correlation; very noisy on its own.
+  Atomic building block. Matches a SINGLE outbound HTTPS connection from an
+  internal source to an external (non-allowlisted) destination.
+  Very noisy on its own (by design) — it exists to be counted/grouped by the
+  correlation rules, not to alert directly.
 author: Zeeshan Haider
 date: 2026/06/25
 modified: 2026/06/25
@@ -20,8 +22,6 @@ detection:
       - 10.0.0.0/8
       - 172.16.0.0/12
       - 192.168.0.0/16
-    network.bytes_out|lt: 512
-    network.bytes_in|lt: 2048
   internal_dest:
     destination.ip|cidr:
       - 10.0.0.0/8
@@ -58,7 +58,6 @@ detection:
   condition: selection and not internal_dest and not (filter_microsoft or filter_google or filter_apple or filter_amazon or filter_common_cdn)
 fields:
   - source.ip
-  - source.port
   - destination.ip
   - destination.domain
   - destination.port
@@ -66,10 +65,10 @@ fields:
   - network.bytes_out
   - timestamp
 falsepositives:
-  - Legitimate small HTTPS requests
-  - API health checks
-  - Application pings to servers
-level: low
+  - Practically all normal outbound HTTPS to non-allowlisted hosts. This rule is
+    not meant to fire as a standalone alert.
+level: informational
 tags:
   - attack.command_and_control
+  - attack.t1071.001
   - detection.atomic
