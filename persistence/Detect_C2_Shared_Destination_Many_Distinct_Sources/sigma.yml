@@ -1,0 +1,33 @@
+title: C2 Shared Destination - Many Distinct Sources (Breadth)
+name: shared_dest_many_sources
+id: Detect_C2_Shared_Destination_Many_Distinct_Sources
+status: test
+description: |
+  Component rule (breadth). Fires when a single external destination is contacted
+  by N or more DISTINCT internal source IPs within the window. Counts distinct
+  source.ip grouped by destination.ip.
+ 
+  Threshold note: gte 5 is set to match a 5-endpoint example. For production raise
+  it (e.g. 10+) after baselining how many distinct hosts normally reach a single
+  external host in your environment.
+author: Zeeshan Haider
+date: 2026/06/25
+modified: 2026/06/25
+correlation:
+  type: value_count
+  rules:
+    - internal_outbound_https
+  group-by:
+    - destination.ip
+  timespan: 1h
+  condition:
+    field: source.ip
+    gte: 5
+level: medium
+falsepositives:
+  - Popular SaaS / API / update endpoints not on the allowlist
+  - Fleet-wide telemetry sent to one collector
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - detection.correlation
