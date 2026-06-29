@@ -1,0 +1,35 @@
+title: C2 Shared Command-and-Control Destination (Breadth AND Depth)
+id: detect_C2_Shared_Command_and_Control_Destination
+status: test
+description: |
+  REQUIREMENT: excessive connections to a single destination by MULTIPLE sources,
+  requiring BOTH conditions on the same destination.ip within the window:
+    - many DISTINCT source IPs (breadth)   -> shared_dest_many_sources
+    - high TOTAL connection volume (depth) -> shared_dest_high_volume
+ 
+  This temporal correlation fires only when BOTH component correlations match for
+  the same destination.ip in the same window - i.e. a single external host that is
+  both widely contacted and heavily contacted. That combination is a strong
+  shared-C2 / staging-server / worm-spread indicator and is far more specific than
+  either component alone.
+ 
+author: Zeeshan Haider
+date: 2026/06/25
+modified: 2026/06/25
+correlation:
+  type: temporal
+  rules:
+    - shared_dest_many_sources
+    - shared_dest_high_volume
+  group-by:
+    - destination.ip
+  timespan: 1h
+level: high
+falsepositives:
+  - A widely-used, high-volume legitimate endpoint missed by the allowlist
+    (resolve by allowlisting the domain in the atomic rule)
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - detection.correlation
+ 
