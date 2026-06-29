@@ -1,0 +1,77 @@
+title: detect_HTTPS_Connection_Using_Command_Line_Tool_User Agent
+name: cli_tool_useragent_https
+id: detect_HTTPS_Connection_Using_Command_Line_Tool_User Agent
+status: test
+description: |
+  Atomic rule. Matches a SINGLE outbound HTTPS connection whose User-Agent
+  belongs to a command-line client or scripting runtime rather than a browser
+  (curl, wget, python-requests, PowerShell, Go-http-client, etc.).
+  A single match is meaningful but common in dev/admin environments, so this
+  feeds a correlation for higher confidence (see corr_c).
+author: Zeeshan Haider
+date: 2026/06/25
+modified: 2026/06/25
+logsource:
+  product: network
+  service: proxy
+  category: web_proxy
+detection:
+  selection:
+    destination.port: 443
+    network.protocol: 'https'
+    source.ip|cidr:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+    http.request.user_agent|contains:
+      - 'curl/'
+      - 'Wget/'
+      - 'python-requests/'
+      - 'python-urllib'
+      - 'Go-http-client'
+      - 'PowerShell'
+      - 'WinHttp'
+      - 'libwww-perl'
+      - 'Java/'
+  internal_dest:
+    destination.ip|cidr:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+  filter_microsoft:
+    destination.domain|endswith:
+      - '.microsoft.com'
+      - '.windows.net'
+      - '.azure.com'
+      - '.office.com'
+  filter_google:
+    destination.domain|endswith:
+      - '.google.com'
+      - '.googleapis.com'
+      - '.gstatic.com'
+  filter_packagerepos:
+    destination.domain|endswith:
+      - '.pypi.org'
+      - '.pythonhosted.org'
+      - '.npmjs.org'
+      - '.github.com'
+      - '.githubusercontent.com'
+      - '.ubuntu.com'
+  condition: selection and not internal_dest and not (filter_microsoft or filter_google or filter_packagerepos)
+fields:
+  - source.ip
+  - destination.ip
+  - destination.domain
+  - destination.port
+  - http.request.user_agent
+  - http.request.method
+  - timestamp
+falsepositives:
+  - Developer/admin use of curl, wget, pip, etc.
+  - CI/CD agents and automation scripts
+  - Application runtimes (Java, Go) making legitimate API calls
+level: low
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - detection.atomic
