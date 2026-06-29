@@ -1,19 +1,17 @@
-title: detect_C2_Frequent_Small_Requests_to_External_HTTPS
-id: detect_C2_Frequent_Small_Requests_to_External_HTTPS
-status: Test
+title: C2 Frequent Small Requests to External HTTPS
+id: detect_C2_Frequent_Small_Requests_to_External_HTTPS 
+status: test
 description: |
-  Atomic rule that detects a SINGLE connection with characteristics of C2 beaconing.
-  Matches when an internal host makes small HTTP/HTTPS requests to external server.
-  This is meant to be combined with other atomic rules via correlation.
+  Atomic rule that detects a SINGLE small HTTPS request from an internal host
+  to an external server. Designed to be combined with other atomic rules via
+  correlation; very noisy on its own.
 author: Zeeshan Haider
 date: 2026/06/25
 modified: 2026/06/25
-
 logsource:
   product: network
   service: proxy
   category: web_proxy
-
 detection:
   selection:
     destination.port: 443
@@ -22,48 +20,42 @@ detection:
       - 10.0.0.0/8
       - 172.16.0.0/12
       - 192.168.0.0/16
-    destination.ip|cidr:
-      - '!10.0.0.0/8'
-      - '!172.16.0.0/12'
-      - '!192.168.0.0/16'
     network.bytes_out|lt: 512
     network.bytes_in|lt: 2048
-
+  internal_dest:
+    destination.ip|cidr:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
   filter_microsoft:
     destination.domain|endswith:
       - '.microsoft.com'
       - '.windows.net'
       - '.azure.com'
       - '.office.com'
-
   filter_google:
     destination.domain|endswith:
       - '.google.com'
       - '.googleapis.com'
       - '.gstatic.com'
       - '.googlesyndication.com'
-
   filter_apple:
     destination.domain|endswith:
       - '.apple.com'
       - '.icloud.com'
       - '.mzstatic.com'
-
   filter_amazon:
     destination.domain|endswith:
       - '.amazon.com'
       - '.aws.com'
       - '.cloudfront.net'
-
   filter_common_cdn:
     destination.domain|endswith:
       - '.cloudflare.com'
       - '.fastly.net'
       - '.akamai.com'
       - '.edgecastcdn.net'
-
-  condition: selection and not (filter_microsoft or filter_google or filter_apple or filter_amazon or filter_common_cdn)
-
+  condition: selection and not internal_dest and not (filter_microsoft or filter_google or filter_apple or filter_amazon or filter_common_cdn)
 fields:
   - source.ip
   - source.port
@@ -73,14 +65,11 @@ fields:
   - network.bytes_in
   - network.bytes_out
   - timestamp
-
 falsepositives:
   - Legitimate small HTTPS requests
   - API health checks
   - Application pings to servers
-
 level: low
-
 tags:
   - attack.command_and_control
   - detection.atomic
