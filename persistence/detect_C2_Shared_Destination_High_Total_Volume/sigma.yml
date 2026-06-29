@@ -1,0 +1,29 @@
+title: C2 Shared Destination - High Total Volume (Depth)
+name: shared_dest_high_volume
+id: detect_C2_Shared_Destination_High_Total_Volume
+status: test
+description: |
+  Component rule (depth). Fires when a single external destination receives N or
+  more TOTAL outbound HTTPS connections within the window, aggregated across ALL
+  internal sources. Counts events grouped by destination.ip only.
+ 
+author: Zeeshan Haider
+date: 2026/06/25
+modified: 2026/06/25
+correlation:
+  type: event_count
+  rules:
+    - internal_outbound_https
+  group-by:
+    - destination.ip
+  timespan: 1h
+  condition:
+    gte: 30
+level: medium
+falsepositives:
+  - Popular SaaS / API / update endpoints not on the allowlist
+  - CDN edges or load-balancer VIPs not covered by the allowlist
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - detection.correlation
