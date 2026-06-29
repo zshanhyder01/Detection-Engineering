@@ -16,7 +16,7 @@ modified: 2026/06/25
 correlation:
   type: value_count
   rules:
-    - internal_outbound_https
+    - Detect_Outbound_HTTPS_Connection_to_External_Host
   group-by:
     - destination.ip
   timespan: 1h
