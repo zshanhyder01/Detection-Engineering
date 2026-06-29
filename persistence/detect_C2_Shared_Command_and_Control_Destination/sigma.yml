@@ -19,8 +19,8 @@ modified: 2026/06/25
 correlation:
   type: temporal
   rules:
-    - shared_dest_many_sources
-    - shared_dest_high_volume
+    - Detect_C2_Shared_Destination_Many_Distinct_Sources
+    - detect_C2_Shared_Destination_High_Total_Volume
   group-by:
     - destination.ip
   timespan: 1h
