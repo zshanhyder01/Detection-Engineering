@@ -1,0 +1,31 @@
+title: TwoFlags Campaign C2 IP Connection
+id: TwoFlags_Campaign_C2_IP_Connection
+status: test
+description: Outbound connection to C2 infrastructure from the SentinelLABS Two Flags report
+# Event IDs: Sysmon EID 3 (network connection) | Security EID 5156/5158 (WFP)
+#            + Sysmon EID 22 / DNS-Client 3008 for the CMS C2 domain
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        DestinationIp:
+            - '172.111.233.36'
+            - '172.111.233.96'
+            - '172.111.233.12'
+            - '172.111.233.105'
+            - '172.111.233.26'
+            - '172.94.9.49'
+            - '172.94.9.43'
+            - '172.94.9.19'
+            - '45.74.6.17'
+            - '45.125.32.218'
+            - '142.171.183.8'
+            - '193.42.25.65'
+            - '89.31.121.220'
+            - '41.216.188.140'
+    condition: selection
+level: high
+tags:
+    - attack.command_and_control
+    - attack.t1071
