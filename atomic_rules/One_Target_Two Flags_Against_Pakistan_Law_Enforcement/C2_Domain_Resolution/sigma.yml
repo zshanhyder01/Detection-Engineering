@@ -1,0 +1,16 @@
+title: TwoFlags CMS C2 Domain Resolution
+id: TwoFlags_CMS_C2_Domain_Resolution
+status: test
+description: DNS lookup for the compromised Balochistan Police CMS domain
+# Event IDs: Sysmon EID 22 (DnsQuery) | Microsoft-Windows-DNS-Client/Operational EID 3008
+logsource:
+    category: dns_query
+    product: windows
+detection:
+    selection:
+        QueryName|endswith: 'cms.balochistanpolice.gov.pk'
+    condition: selection
+level: medium
+tags:
+    - attack.command_and_control
+    - attack.t1071.004
