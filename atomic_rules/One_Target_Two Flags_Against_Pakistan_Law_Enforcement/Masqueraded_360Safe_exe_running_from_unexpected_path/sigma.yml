@@ -1,0 +1,22 @@
+title: Masqueraded_360Safe.exe 
+id: Masqueraded_360Safe_exe
+status: test
+description: 360Safe.exe executing from a directory other than a legitimate Qihoo 360 install path
+# Event IDs: Sysmon EID 1 (process creation) | Security EID 4688
+#            Pair with Sysmon EID 7 (image load) to catch the reflective .NET assembly load
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\360Safe.exe'
+    filter_legit:
+        Image|contains:
+            - '\360\'
+            - '\360safe\'
+            - '\360Total Security\'
+    condition: selection and not filter_legit
+level: high
+tags:
+    - attack.defense_evasion
+    - attack.t1036.005
