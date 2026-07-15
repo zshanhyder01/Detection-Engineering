@@ -1,0 +1,19 @@
+title: Executable Written to Web Content Directory
+id: Executable_dropped_into_web_server_client_scripts_directory
+status: test
+description: PE file created under a web-served scripts directory - implant hosting behaviour
+# Event IDs: Sysmon EID 11 (file create) | Security EID 4663 (requires audit SACL on web root) / 4656
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains:
+            - '\client scripts\'
+            - '\client%20scripts\'
+        TargetFilename|endswith: '.exe'
+    condition: selection
+level: high
+tags:
+    - attack.persistence
+    - attack.t1505.003
