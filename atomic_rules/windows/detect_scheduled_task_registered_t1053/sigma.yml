@@ -1,0 +1,15 @@
+title: Scheduled Task Registered [T1053]
+name: scheduled_task_registered_t1053
+status: test
+description: Base rule - a scheduled task was registered (Security 4698). Feeds the create-then-delete correlation.
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4698
+    condition: selection
+level: informational
+tags:
+    - attack.persistence
+    - attack.t1053.005
