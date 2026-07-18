@@ -1,0 +1,19 @@
+title: DNS Tunneling - High Volume Of TXT Or NULL Queries From Single Host
+id: Detect_DNS_Tunneling_High_Volume_Of_TXT_Or_NULL_Queries_From_Single_Host
+status: test
+description: A burst of TXT/NULL DNS queries from one source host within a short window is a strong DNS tunneling indicator, as legitimate use of these record types is typically sparse.
+references:
+    - https://attack.mitre.org/techniques/T1071/004/
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+correlation:
+    type: event_count
+    rules:
+        - DNS_Query_For_Tunneling_Prone_Record_Types
+    group-by:
+        - id.orig_h
+    timespan: 5m
+    condition:
+        gte: 100
+level: high
