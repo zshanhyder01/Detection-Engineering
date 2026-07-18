@@ -1,0 +1,14 @@
+title: Scheduled Task Deleted [T1053]
+name: scheduled_task_deleted_t1053
+status: test
+description: Base rule - a scheduled task was deleted (Security 4699). Feeds the create-then-delete correlation.
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4699
+    condition: selection
+level: informational
+tags:
+    - attack.t1053.005
