@@ -1,0 +1,24 @@
+title: DNS Query With Long Encoded Subdomain Label
+id: DNS_Query_With_Long_Encoded_Subdomain_Label
+status: test
+description: Detects a single DNS label of 40+ characters drawn from an encoding charset, indicative of base32/base64/hex-encoded data carried in a subdomain.
+references:
+    - https://attack.mitre.org/techniques/T1071/004/
+author: Detection Engineering
+date: 2026-06-29
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+    - attack.exfiltration
+    - attack.t1048
+logsource:
+    product: windows
+    category: dns_query
+detection:
+    selection:
+        QueryName|re: '(?i)(^|\.)[a-z0-9+/=_-]{40,}\.'
+    condition: selection
+falsepositives:
+    - DKIM/ACME and other long machine-generated subdomains
+    - Some telemetry / analytics hostnames
+level: medium
