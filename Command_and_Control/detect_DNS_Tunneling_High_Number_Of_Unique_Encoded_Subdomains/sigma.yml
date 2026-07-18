@@ -1,0 +1,22 @@
+title: DNS Tunneling - High Number Of Unique Encoded Subdomains
+id: detect_DNS_Tunneling_High_Number_Of_Unique_Encoded_Subdomains
+status: test
+description: A host generating a large number of distinct long/encoded DNS names in a short window reflects the unique-subdomain-per-chunk pattern of DNS-based data exfiltration.
+references:
+    - https://attack.mitre.org/techniques/T1071/004/
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+    - attack.exfiltration
+    - attack.t1048
+correlation:
+    type: value_count
+    rules:
+        - DNS_Query_With_Long_Encoded_Subdomain_Label
+    group-by:
+        - Computer
+    timespan: 5m
+    condition:
+        gte: 50
+        field: QueryName
+level: high
