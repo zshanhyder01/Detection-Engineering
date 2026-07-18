@@ -1,0 +1,29 @@
+title: Known DNS Tunneling Tool Activity
+id: Known_DNS_Tunneling_Tool_Activity
+status: test
+description: Detects DNS activity associated with well-known DNS tunneling utilities by process image name or characteristic query markers.
+references:
+    - https://attack.mitre.org/techniques/T1071/004/
+author: Detection Engineering
+date: 2026-06-29
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+logsource:
+    product: windows
+    category: dns_query
+detection:
+    selection_image:
+        Image|endswith:
+            - '\iodine.exe'
+            - '\dnscat2.exe'
+            - '\dnscat.exe'
+            - '\dns2tcp.exe'
+            - '\dnsexfiltrator.exe'
+    selection_marker:
+        QueryName|contains:
+            - 'dnscat.'      # dnscat2 default query tag
+    condition: selection_image or selection_marker
+falsepositives:
+    - Authorized red-team / penetration-testing activity
+level: high
