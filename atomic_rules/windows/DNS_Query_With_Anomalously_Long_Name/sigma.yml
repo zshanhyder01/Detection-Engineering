@@ -1,0 +1,28 @@
+title: DNS Query With Anomalously Long Name
+id: dns_tunnel_long_query_name
+status: test
+description: Detects DNS queries whose fully qualified name is unusually long, a common artifact of data being encoded into the query name by tunneling tools.
+references:
+    - https://attack.mitre.org/techniques/T1071/004/
+author: Detection Engineering
+date: 2026-06-29
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+    - attack.exfiltration
+    - attack.t1048
+logsource:
+    product: windows
+    category: dns_query
+detection:
+    selection:
+        QueryName|re: '^.{150,}$'        # full QNAME >= 150 chars (tunneling often 200+)
+    filter_reverse_lookup:
+        QueryName|endswith:
+            - '.in-addr.arpa'
+            - '.ip6.arpa'
+    condition: selection and not filter_reverse_lookup
+falsepositives:
+    - CDNs / cloud services embedding long tokens in hostnames
+    - Antivirus and EDR reputation lookups
+level: medium
