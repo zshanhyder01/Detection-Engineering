@@ -1,0 +1,21 @@
+title: DNS Tunneling - High Volume Of Long Queries From Single Host
+id: DNS_Tunneling_High_Volume_Of_Long_Queries_From_Single_hostle_Host
+status: test
+description: A single host emitting many anomalously long DNS queries within a short window strongly indicates active DNS tunneling or exfiltration rather than incidental long hostnames.
+references:
+    - https://attack.mitre.org/techniques/T1071/004/
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+    - attack.exfiltration
+    - attack.t1048
+correlation:
+    type: event_count
+    rules:
+        - dns_tunnel_long_query_name
+    group-by:
+        - Computer
+    timespan: 5m
+    condition:
+        gte: 50
+level: high
