@@ -1,0 +1,19 @@
+title: Scheduled Task Created Then Deleted Quickly [T1053]
+status: test
+description: >
+    A task registered and then deleted within a short window is a common
+    "run once and self-clean" pattern - execute a payload while minimising the
+    persistence footprint. Grouped by TaskName so create/delete are paired.
+correlation:
+    type: temporal_ordered
+    rules:
+        - scheduled_task_registered_t1053
+        - scheduled_task_deleted_t1053
+    group-by:
+        - TaskName
+    timespan: 10m
+level: high
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1053.005
