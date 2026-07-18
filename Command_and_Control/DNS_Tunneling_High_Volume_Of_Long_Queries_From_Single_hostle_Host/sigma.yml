@@ -12,7 +12,7 @@ tags:
 correlation:
     type: event_count
     rules:
-        - dns_tunnel_long_query_name
+        - DNS_Query_With_Anomalously_Long_Name
     group-by:
         - Computer
     timespan: 5m
