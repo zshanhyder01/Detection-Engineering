@@ -1,0 +1,46 @@
+title: Suspicious Scheduled Task Creation Via Schtasks [T1053]
+name: schtasks_creation_cmdline_t1053
+status: test
+description: >
+    schtasks.exe /create where the task action references a LOLBin, encoded
+    payload, or user-writable path, or runs as SYSTEM. Standalone atomic rule.
+references:
+    - https://attack.mitre.org/techniques/T1053/005/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith: '\schtasks.exe'
+        - OriginalFileName: 'schtasks.exe'
+    selection_create:
+        CommandLine|contains: ' /create'
+    selection_susp:
+        CommandLine|contains:
+            - 'powershell'
+            - 'pwsh'
+            - 'cmd /c'
+            - 'cmd.exe /c'
+            - 'mshta'
+            - 'rundll32'
+            - 'regsvr32'
+            - 'wscript'
+            - 'cscript'
+            - '-enc'
+            - 'FromBase64String'
+            - 'DownloadString'
+            - '\Users\Public\'
+            - '\AppData\'
+            - '\Temp\'
+    selection_ru_system:
+        CommandLine|contains|all:
+            - ' /ru '
+            - 'SYSTEM'
+    condition: selection_img and selection_create and (selection_susp or selection_ru_system)
+falsepositives:
+    - Legitimate software installers creating SYSTEM tasks
+level: high
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1053.005
