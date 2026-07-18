@@ -1,0 +1,23 @@
+title: DNS Query For Tunneling-Prone Record Types
+id: DNS_Query_For_Tunneling_Prone_Record_Types
+status: test
+description: Detects DNS queries for TXT and NULL records, which DNS tunneling implementations favor because they accommodate larger encoded payloads.
+references:
+    - https://attack.mitre.org/techniques/T1071/004/
+author: Detection Engineering
+date: 2026-06-29
+tags:
+    - attack.command-and-control
+    - attack.t1071.004
+logsource:
+    product: zeek
+    service: dns
+detection:
+    selection:
+        qtype_name:
+            - 'TXT'
+            - 'NULL'
+    condition: selection
+falsepositives:
+    - Legitimate TXT lookups (SPF/DKIM/DMARC verification, ACME challenges)
+level: low
