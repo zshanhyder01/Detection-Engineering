@@ -1,0 +1,48 @@
+title: Suspicious Service Installed With Anomalous ImagePath [T1543]
+name: service_install_suspicious_imagepath_t1543
+status: test
+description: >
+    A new Windows service (System event 7045) whose ImagePath points at a
+    user-writable directory or directly invokes a script host / LOLBin. New
+    services run in a privileged (often SYSTEM) context, making this a common
+    privilege-escalation and persistence pivot.
+references:
+    - https://attack.mitre.org/techniques/T1543/003/
+author: Detection Engineering
+date: 2026-07-19
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        EventID: 7045
+    selection_susp_path:
+        ImagePath|contains:
+            - '\Users\'
+            - '\AppData\'
+            - '\Temp\'
+            - '\ProgramData\'
+            - '\PerfLogs\'
+            - '\Public\'
+    selection_lolbin:
+        ImagePath|contains:
+            - 'powershell'
+            - 'pwsh'
+            - 'cmd.exe /c'
+            - 'cmd /c'
+            - 'rundll32'
+            - 'regsvr32'
+            - 'mshta'
+            - 'wscript'
+            - 'cscript'
+            - '-enc'
+            - 'FromBase64String'
+            - 'DownloadString'
+    condition: selection and (selection_susp_path or selection_lolbin)
+falsepositives:
+    - Some legitimate third-party software installs services from ProgramData
+level: high
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1543.003
