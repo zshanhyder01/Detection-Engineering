@@ -1,0 +1,48 @@
+title: Existing Service ImagePath Modified In Registry [T1543]
+name: service_imagepath_registry_tamper_t1543
+status: test
+description: >
+    The ImagePath value of a service is rewritten in the registry (Sysmon EID 13)
+    to point at a LOLBin, encoded payload, or user-writable path. This covers the
+    "Modify" half of T1543 - hijacking an EXISTING service binary - which the
+    7045 "new service" event does not capture.
+references:
+    - https://attack.mitre.org/techniques/T1543/003/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_key:
+        TargetObject|contains: '\Services\'
+        TargetObject|endswith: '\ImagePath'
+    selection_susp_value:
+        Details|contains:
+            - '\Users\'
+            - '\AppData\'
+            - '\Temp\'
+            - '\ProgramData\'
+            - '\Public\'
+            - 'powershell'
+            - 'pwsh'
+            - 'cmd.exe /c'
+            - 'cmd /c'
+            - 'rundll32'
+            - 'regsvr32'
+            - 'mshta'
+            - 'wscript'
+            - 'cscript'
+            - '-enc'
+    filter_trusted:
+        Image|endswith:
+            - '\TrustedInstaller.exe'
+            - '\msiexec.exe'
+            - '\services.exe'
+    condition: selection_key and selection_susp_value and not filter_trusted
+falsepositives:
+    - Legitimate service reconfiguration by installers (msiexec, TrustedInstaller)
+level: high
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.t1543.003
