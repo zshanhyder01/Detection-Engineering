@@ -76,8 +76,9 @@ Where the reliable signal is a *sequence*, the correlations depend on low-noise 
 
 ### 4.1. Atomic Rules
 
+
 | # | Rule Name | Source Event | How it helps detection |
 |---|---|---|---|
-| 1 | `service_install_suspicious_imagepath_t1543` | System 7045 | Flags a **new** service whose `ImagePath` is a user-writable path or LOLBin — the classic *create* variant. |
-| 2 | `service_creation_cmdline_t1543` | Sysmon EID 1 | Catches the operator action (`sc create` / `New-Service`) at command-line level, even if the 7045 event is missed or suppressed. |
-| 3 | `service_imagepath_registry_tamper_t1543` | Sysmon EID 13 | Detects the **modify** variant — rewriting an existing service's `ImagePath` in the registry — which 7045 (new-service only) never sees. |
+| 1 | [`service_install_suspicious_imagepath_t1543`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_service_install_suspicious_imagepath_t1543/sigma.yml) | System 7045 | Flags a **new** service whose `ImagePath` is a user-writable path or LOLBin — the classic *create* variant. |
+| 2 | [`service_creation_cmdline_t1543`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/service_creation_cmdline_t1543/sigma.yml) | Sysmon EID 1 | Catches the operator action (`sc create` / `New-Service`) at command-line level, even if the 7045 event is missed or suppressed. |
+| 3 | [`service_imagepath_registry_tamper_t1543`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/service_imagepath_registry_tamper_t1543/sigma.yml) | Sysmon EID 13 | Detects the **modify** variant — rewriting an existing service's `ImagePath` in the registry — which 7045 (new-service only) never sees. |
