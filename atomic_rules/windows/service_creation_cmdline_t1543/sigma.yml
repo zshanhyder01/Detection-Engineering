@@ -1,0 +1,39 @@
+title: Service Creation Via Command Line Tools [T1543]
+name: service_creation_cmdline_t1543
+status: test
+description: >
+    Service creation through sc.exe or PowerShell New-Service where the binary
+    path references a user-writable location or a LOLBin. Catches the operator
+    action even when the resulting 7045 event is missed or suppressed.
+references:
+    - https://attack.mitre.org/techniques/T1543/003/
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_tool:
+        - Image|endswith: '\sc.exe'
+          CommandLine|contains: ' create'
+        - CommandLine|contains: 'New-Service'
+    selection_susp:
+        CommandLine|contains:
+            - '\Temp\'
+            - '\AppData\'
+            - '\Users\Public\'
+            - '\ProgramData\'
+            - 'powershell'
+            - 'pwsh'
+            - 'cmd /c'
+            - 'cmd.exe /c'
+            - 'rundll32'
+            - 'regsvr32'
+            - 'mshta'
+            - '-enc'
+    condition: selection_tool and selection_susp
+falsepositives:
+    - Admin scripts and installers registering services
+level: high
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1543.003
