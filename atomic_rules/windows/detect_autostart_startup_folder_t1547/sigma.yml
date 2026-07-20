@@ -1,0 +1,39 @@
+title: Executable Or Script Dropped In Startup Folder [T1547]
+name: autostart_startup_folder_t1547
+status: test
+description: >
+    A file with an executable, script, or shortcut extension is created in a
+    Start Menu Startup folder. Anything placed here runs at user logon; the
+    All Users startup folder runs for every user on the host.
+references:
+    - https://attack.mitre.org/techniques/T1547/001/
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|contains: '\Start Menu\Programs\Startup\'
+    selection_ext:
+        TargetFilename|endswith:
+            - '.exe'
+            - '.dll'
+            - '.lnk'
+            - '.bat'
+            - '.cmd'
+            - '.ps1'
+            - '.vbs'
+            - '.vbe'
+            - '.js'
+            - '.jse'
+            - '.hta'
+            - '.scr'
+            - '.com'
+            - '.pif'
+    condition: selection and selection_ext
+falsepositives:
+    - Legitimate installers adding a startup shortcut (.lnk)
+level: medium
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1547.001
