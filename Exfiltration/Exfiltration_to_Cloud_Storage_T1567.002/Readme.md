@@ -76,8 +76,7 @@ The strategy layers **atomic rules** (each catches a single high-value artifact 
 | 5 | [`cloud_storage_large_upload`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/Proxy/Large_Outbound_Upload_to_Cloud_Storage_via_Web_Proxy/sigma.yml) | proxy | A single large (`≥10 MB`) `PUT`/`POST` upload to a cloud storage host. |
 | 6 | [`data_staged_archive`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/Detect_Data_Staged_via_Archive_Utility_t1560.001/sigma.yml) | process_creation | Data being compressed/password-protected into an archive — the staging precursor to exfiltration. |
 ### List of Correlation Rules
-
 | # | Rule name | Type | Atomic rules used | Why it helps |
 |---|---|---|---|---|
-| C1 | `stage_then_cloud_exfil` | `temporal_ordered` | `data_staged_archive` → `cloud_storage_network_connection` | Confirms the **archive-then-upload** kill-chain sequence on one host in a short window, converting two medium-confidence signals into one high-confidence detection. |
-| C2 | `bulk_cloud_upload_volume` | `event_count` | `cloud_storage_large_upload` | Catches **automated bulk exfiltration** — many large uploads from one source in a short window — even when each individual upload looks routine. |
+| C1 | [`stage_then_cloud_exfil`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/Exfiltration/Exfiltration_to_Cloud_Storage_T1567.002/Data_Staging_Followed_by_Cloud_Storage_Exfiltration/sigma.yml) | `temporal_ordered` | `data_staged_archive` → `cloud_storage_network_connection` | Confirms the **archive-then-upload** kill-chain sequence on one host in a short window, converting two medium-confidence signals into one high-confidence detection. |
+| C2 | [`bulk_cloud_upload_volume`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/Exfiltration/Exfiltration_to_Cloud_Storage_T1567.002/High_Volume_of_Large_Uploads_to_Cloud_Storage/sigma.yml) | `event_count` | `cloud_storage_large_upload` | Catches **automated bulk exfiltration** — many large uploads from one source in a short window — even when each individual upload looks routine. |
