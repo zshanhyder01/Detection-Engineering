@@ -1,0 +1,26 @@
+title: High Volume of Large Uploads to Cloud Storage
+status: test
+description: >
+    Detects sustained bulk exfiltration - many large upload transactions to a
+    cloud storage service from a single source in a short window - indicative of
+    automated tooling copying a dataset, even when each upload looks routine.
+references:
+    - https://attack.mitre.org/techniques/T1567/002/
+    - https://attack.mitre.org/techniques/T1030/
+author: Detection Engineering
+date: 2026/07/20
+correlation:
+    type: event_count
+    rules:
+        - cloud_storage_large_upload
+    group-by:
+        - src_ip
+        - cs_host
+    timespan: 30m
+    condition:
+        gte: 20
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+    - attack.t1030
+level: high
