@@ -1,0 +1,46 @@
+title: Cloud Storage CLI Upload Utility Execution
+status: test
+description: >
+    Detects execution of common cloud storage command-line clients in an upload
+    mode (MEGAcmd/megatools, AWS S3 CLI, Google gsutil/gcloud storage, Azure CLI).
+    These are routinely abused to push staged data to attacker-controlled buckets.
+references:
+    - https://attack.mitre.org/techniques/T1567/002/
+author: Detection Engineering
+date: 2026/07/20
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_mega:
+        - Image|endswith:
+            - '\MEGAclient.exe'
+            - '\MEGAcmd.exe'
+            - '\megatools.exe'
+            - '\mega-put.exe'
+        - CommandLine|contains:
+            - 'megatools put'
+            - 'mega-put '
+    selection_aws:
+        CommandLine|contains|all:
+            - 'aws '
+            - 's3 '
+        CommandLine|contains:
+            - ' cp '
+            - ' sync '
+    selection_gcp:
+        CommandLine|contains:
+            - 'gsutil cp'
+            - 'gsutil -m cp'
+            - 'gcloud storage cp'
+    selection_azure:
+        CommandLine|contains|all:
+            - 'az storage blob upload'
+    condition: 1 of selection_*
+falsepositives:
+    - DevOps/CI pipelines and cloud administrators using these CLIs legitimately (scope by host/service account)
+level: medium
+name: cloud_cli_upload_tool
