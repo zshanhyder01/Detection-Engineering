@@ -1,0 +1,51 @@
+title: Non-Browser Network Connection to Cloud Storage Service
+status: test
+description: >
+    Detects a network connection to a known cloud storage service made by a
+    process that is NOT a standard web browser — a strong indicator of tool- or
+    script-based exfiltration rather than routine user browsing.
+references:
+    - https://attack.mitre.org/techniques/T1567/002/
+author: Detection Engineering
+date: 2026/07/20
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Initiated: 'true'
+        DestinationHostname|contains:
+            - 'mega.nz'
+            - 'mega.co.nz'
+            - 'dropbox.com'
+            - 'dropboxapi.com'
+            - 'drive.google.com'
+            - 'storage.googleapis.com'
+            - '1drv.ms'
+            - 'onedrive.live.com'
+            - 'box.com'
+            - 'pcloud.com'
+            - 'mediafire.com'
+            - 'wetransfer.com'
+            - 'gofile.io'
+            - 'file.io'
+            - 'transfer.sh'
+    filter_browsers:
+        Image|endswith:
+            - '\chrome.exe'
+            - '\msedge.exe'
+            - '\firefox.exe'
+            - '\brave.exe'
+            - '\opera.exe'
+    filter_sanctioned_clients:
+        Image|endswith:
+            - '\OneDrive.exe'
+            - '\Dropbox.exe'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Sanctioned sync clients (filtered above) and non-browser LOB apps that legitimately use cloud storage
+level: medium
+name: cloud_storage_network_connection
