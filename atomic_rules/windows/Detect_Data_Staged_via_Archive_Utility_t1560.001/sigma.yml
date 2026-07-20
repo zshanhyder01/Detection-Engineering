@@ -1,0 +1,37 @@
+title: Data Staged via Archive Utility (Exfiltration Precursor)
+status: test
+description: >
+    Detects compression of data into an archive, frequently with password
+    protection - the staging step that typically precedes exfiltration to cloud
+    storage. Used standalone (low sev) and as the first stage of correlation C1.
+references:
+    - https://attack.mitre.org/techniques/T1560/001/
+author: Detection Engineering
+date: 2026/07/20
+tags:
+    - attack.collection
+    - attack.t1560.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_tools:
+        - Image|endswith:
+            - '\7z.exe'
+            - '\7za.exe'
+            - '\rar.exe'
+            - '\WinRAR.exe'
+        - OriginalFileName:
+            - '7z.exe'
+            - 'Rar.exe'
+    selection_action:
+        CommandLine|contains:
+            - ' a '
+            - ' -hp'
+            - ' -p'
+            - ' -mx'
+    condition: selection_tools and selection_action
+falsepositives:
+    - Legitimate use of archive tools by users and backup software
+level: low
+name: data_staged_archive
