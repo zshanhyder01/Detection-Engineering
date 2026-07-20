@@ -1,0 +1,48 @@
+title: Large Outbound Upload to Cloud Storage via Web Proxy
+status: test
+description: >
+    Detects a single large upload (>=10 MB client-to-server) via PUT/POST to a
+    known cloud storage host in web proxy / secure web gateway logs.
+references:
+    - https://attack.mitre.org/techniques/T1567/002/
+    - https://attack.mitre.org/techniques/T1030/
+author: Detection Engineering
+date: 2026/07/20
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+logsource:
+    category: proxy
+detection:
+    selection_host:
+        cs_host|contains:
+            - 'mega.nz'
+            - 'mega.co.nz'
+            - 'dropbox'
+            - 'drive.google.com'
+            - 'storage.googleapis.com'
+            - 'onedrive'
+            - '1drv.ms'
+            - 'box.com'
+            - 'pcloud'
+            - 'mediafire'
+            - 'wetransfer'
+            - 'gofile.io'
+            - 'file.io'
+            - 'transfer.sh'
+    selection_method:
+        cs_method:
+            - 'PUT'
+            - 'POST'
+    selection_volume:
+        cs_bytes|gte: 10485760
+    condition: selection_host and selection_method and selection_volume
+fields:
+    - src_ip
+    - user
+    - cs_host
+    - cs_bytes
+falsepositives:
+    - Users legitimately uploading large files to sanctioned corporate cloud storage
+level: medium
+name: cloud_storage_large_upload
