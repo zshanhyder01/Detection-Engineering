@@ -1,0 +1,31 @@
+title: Winlogon Helper Registry Value Modified [T1547]
+name: autostart_winlogon_helper_t1547
+status: test
+description: >
+    Modification of Winlogon Userinit / Shell / AppSetup values. These execute during the interactive logon
+    sequence in a privileged context. Default legitimate values are filtered.
+references:
+    - https://attack.mitre.org/techniques/T1547/004/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_keys:
+        TargetObject|contains:
+            - '\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit'
+            - '\Microsoft\Windows NT\CurrentVersion\Winlogon\Shell'
+            - '\Microsoft\Windows NT\CurrentVersion\Winlogon\AppSetup'
+    filter_legit_userinit:
+        TargetObject|endswith: '\Userinit'
+        Details|startswith: 'C:\Windows\system32\userinit.exe,'
+    filter_legit_shell:
+        TargetObject|endswith: '\Shell'
+        Details: 'explorer.exe'
+    condition: selection_keys and not 1 of filter_legit_*
+falsepositives:
+    - Rare - default Userinit/Shell values are excluded by the filters
+level: high
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1547.004
