@@ -1,0 +1,37 @@
+title: Print Processor Or Port Monitor Registry Modified [T1547]
+name: autostart_print_spooler_dll_t1547
+status: test
+description: >
+    Registration of a Print Processor or Port Monitor DLL under the print spooler
+    driver keys. The referenced DLL is loaded by spoolsv.exe (SYSTEM) at service
+    start / boot, providing SYSTEM-level execution and persistence.
+references:
+    - https://attack.mitre.org/techniques/T1547/012/
+    - https://attack.mitre.org/techniques/T1547/010/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_key:
+        TargetObject|contains:
+            - '\Control\Print\Environments\'
+            - '\Control\Print\Monitors\'
+    selection_value:
+        TargetObject|endswith:
+            - '\Driver'
+            - '\Dll'
+    filter_trusted:
+        Image|endswith:
+            - '\spoolsv.exe'
+            - '\printui.exe'
+            - '\msiexec.exe'
+            - '\TrustedInstaller.exe'
+    condition: selection_key and selection_value and not filter_trusted
+falsepositives:
+    - Printer driver installation by administrators or print-management software
+level: high
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1547.012
+    - attack.t1547.010
