@@ -1,0 +1,30 @@
+title: LSA Security Or Authentication Package Registry Modified [T1547]
+name: autostart_lsa_package_t1547
+status: test
+description: >
+    Modification of the LSA Security Packages / Authentication Packages /
+    Notification Packages lists. DLLs referenced here are loaded into lsass.exe
+    (SYSTEM) at boot, granting privileged code execution and persistence. These
+    values are almost never changed on a production host.
+references:
+    - https://attack.mitre.org/techniques/T1547/005/
+    - https://attack.mitre.org/techniques/T1547/002/
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection:
+        TargetObject|contains:
+            - '\Control\Lsa\Security Packages'
+            - '\Control\Lsa\Authentication Packages'
+            - '\Control\Lsa\Notification Packages'
+            - '\Control\Lsa\OSConfig\Security Packages'
+    condition: selection
+falsepositives:
+    - Rare - domain controller promotion or specific security products (e.g. MFA/credential providers)
+level: high
+tags:
+    - attack.privilege-escalation
+    - attack.persistence
+    - attack.t1547.005
+    - attack.t1547.002
