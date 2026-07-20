@@ -1,0 +1,25 @@
+title: Data Staging Followed by Cloud Storage Exfiltration
+status: test
+description: >
+    Correlates the classic collect-then-exfiltrate chain: data compressed into an
+    archive and, within a short window on the same host, a non-browser process
+    connecting out to a cloud storage service. Linking the two stages sharply
+    reduces the false positives inherent in either atomic rule alone.
+references:
+    - https://attack.mitre.org/techniques/T1567/002/
+    - https://attack.mitre.org/techniques/T1560/001/
+author: Detection Engineering
+date: 2026/07/20
+correlation:
+    type: temporal_ordered
+    rules:
+        - Detect_Data_Staged_via_Archive_Utility_t1560.001
+        - Detect_Non_Browser_Network_Connection_to_Cloud_Storage_Service
+    group-by:
+        - Computer
+    timespan: 30m
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+    - attack.t1560.001
+level: high
