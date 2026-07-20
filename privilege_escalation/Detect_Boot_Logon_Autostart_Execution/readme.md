@@ -75,8 +75,8 @@ Detection is built entirely from **atomic rules**, one per autostart surface. Ea
 
 | # | Rule Name | Source Event | Sub-tech | How it helps detection |
 |---|---|---|---|---|
-| 1 | `autostart_run_key_t1547` | Sysmon EID 13 | .001 | Flags Run/RunOnce values set to a user-writable path, LOLBin, or encoded payload. |
-| 2 | `autostart_startup_folder_t1547` | Sysmon EID 11 | .001 | Detects executable/script/shortcut files dropped into a Startup folder. |
-| 3 | `autostart_winlogon_helper_t1547` | Sysmon EID 13 | .004 | Detects tampering with Winlogon `Userinit`/`Shell`/`Notify` (logon-context execution); default values filtered. |
-| 4 | `autostart_lsa_package_t1547` | Sysmon EID 13 | .005 / .002 | Detects changes to LSA Security/Authentication/Notification package lists — DLLs loaded into `lsass.exe` (SYSTEM). |
-| 5 | `autostart_print_spooler_dll_t1547` | Sysmon EID 13 | .012 / .010 | Detects registration of a Print Processor / Port Monitor DLL loaded by `spoolsv.exe` (SYSTEM). |
+| 1 | [`autostart_run_key_t1547`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_autostart_run_key_t1547/sigma.yml) | Sysmon EID 13 | .001 | Flags Run/RunOnce values set to a user-writable path, LOLBin, or encoded payload. |
+| 2 | [`autostart_startup_folder_t1547`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_autostart_startup_folder_t1547/sigma.yml) | Sysmon EID 11 | .001 | Detects executable/script/shortcut files dropped into a Startup folder. |
+| 3 | [`autostart_winlogon_helper_t1547`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_autostart_winlogon_helper_t1547/sigma.yml) | Sysmon EID 13 | .004 | Detects tampering with Winlogon `Userinit`/`Shell`/`Notify` (logon-context execution); default values filtered. |
+| 4 | [`autostart_lsa_package_t1547`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_autostart_lsa_package_t1547/sigma.yml) | Sysmon EID 13 | .005 / .002 | Detects changes to LSA Security/Authentication/Notification package lists — DLLs loaded into `lsass.exe` (SYSTEM). |
+| 5 | [`autostart_print_spooler_dll_t1547`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_autostart_print_spooler_dll_t1547/sigma.yml) | Sysmon EID 13 | .012 / .010 | Detects registration of a Print Processor / Port Monitor DLL loaded by `spoolsv.exe` (SYSTEM). |
