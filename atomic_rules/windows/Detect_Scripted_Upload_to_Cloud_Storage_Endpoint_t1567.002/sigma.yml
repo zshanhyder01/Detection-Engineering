@@ -1,0 +1,44 @@
+title: Scripted Upload to Cloud Storage Endpoint
+status: test
+description: >
+    Detects PowerShell / scripting upload primitives directed at cloud storage
+    API endpoints, a common "living-off-the-land" exfiltration path that avoids
+    dropping a dedicated tool.
+references:
+    - https://attack.mitre.org/techniques/T1567/002/
+author: Detection Engineering
+date: 2026/07/20
+tags:
+    - attack.exfiltration
+    - attack.t1567.002
+    - attack.t1059.001
+logsource:
+    product: windows
+    category: ps_script
+detection:
+    selection_method:
+        ScriptBlockText|contains:
+            - 'Invoke-WebRequest'
+            - 'Invoke-RestMethod'
+            - 'System.Net.WebClient'
+            - '.UploadFile'
+            - 'Start-BitsTransfer'
+            - 'curl '
+    selection_dest:
+        ScriptBlockText|contains:
+            - 'content.dropboxapi.com'
+            - 'api.dropboxapi.com'
+            - 'graph.microsoft.com'
+            - 'storage.googleapis.com'
+            - 'googleapis.com/upload'
+            - '.s3.amazonaws.com'
+            - 'blob.core.windows.net'
+            - 'api.mega.co.nz'
+            - 'gofile.io'
+            - 'file.io'
+            - 'transfer.sh'
+    condition: selection_method and selection_dest
+falsepositives:
+    - Legitimate backup or automation scripts uploading to sanctioned corporate cloud storage
+level: high
+name: script_cloud_upload
