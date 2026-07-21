@@ -1,0 +1,38 @@
+title: External Email Forwarding Inbox Rule Created or Modified
+status: test
+description: >
+    Detects creation or modification of a mailbox inbox rule that forwards,
+    forwards-as-attachment, or redirects incoming mail to an external recipient -
+    the classic post-account-takeover (BEC) email exfiltration channel.
+references:
+    - https://attack.mitre.org/techniques/T1114/003/
+author: Detection Engineering
+date: 2026/07/21
+tags:
+    - attack.collection
+    - attack.t1114.003
+    - attack.exfiltration
+logsource:
+    product: m365
+    service: exchange
+detection:
+    selection_op:
+        RecordType:
+            - 1   # ExchangeAdmin (New-InboxRule / Set-InboxRule)
+            - 2   # ExchangeItem  (UpdateInboxRules from Outlook client)
+        Operation:
+            - 'New-InboxRule'
+            - 'Set-InboxRule'
+            - 'UpdateInboxRules'
+    selection_forward:
+        Parameters|contains:
+            - 'ForwardTo'
+            - 'ForwardAsAttachmentTo'
+            - 'RedirectTo'
+    filter_internal:
+        Parameters|contains: '@yourcompany.com'
+    condition: selection_op and selection_forward and not filter_internal
+falsepositives:
+    - Users legitimately forwarding to an approved external partner mailbox (allowlist)
+level: high
+name: inbox_rule_external_forward
