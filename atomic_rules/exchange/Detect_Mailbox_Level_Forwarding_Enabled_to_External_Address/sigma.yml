@@ -1,0 +1,31 @@
+title: Mailbox-Level Forwarding Enabled to External Address
+status: test
+description: >
+    Detects server-side mailbox forwarding configured via Set-Mailbox using
+    ForwardingSmtpAddress or ForwardingAddress, which silently forwards all of a
+    user's mail without any client-side rule being visible to the user.
+references:
+    - https://attack.mitre.org/techniques/T1114/003/
+author: Detection Engineering
+date: 2026/07/21
+tags:
+    - attack.collection
+    - attack.t1114.003
+    - attack.exfiltration
+logsource:
+    product: m365
+    service: exchange
+detection:
+    selection:
+        RecordType: 1            # ExchangeAdmin
+        Operation: 'Set-Mailbox'
+        Parameters|contains:
+            - 'ForwardingSmtpAddress'
+            - 'ForwardingAddress'
+    filter_internal:
+        Parameters|contains: '@yourcompany.com'
+    condition: selection and not filter_internal
+falsepositives:
+    - Admin-configured forwarding for shared mailboxes or departing employees (validate via change control)
+level: high
+name: mailbox_forwarding_enabled
