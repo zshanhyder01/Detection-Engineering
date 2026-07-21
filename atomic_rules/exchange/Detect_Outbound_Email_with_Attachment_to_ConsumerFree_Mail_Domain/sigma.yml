@@ -1,0 +1,52 @@
+title: Outbound Email with Attachment to Consumer/Free-Mail Domain
+status: test
+description: >
+    Detects outbound messages carrying attachments to consumer / free-mail domains.
+    Individually low-signal, this rule is the transport-layer building block that
+    the correlation rules use to confirm and quantify active email exfiltration.
+references:
+    - https://attack.mitre.org/techniques/T1114/
+author: Detection Engineering
+date: 2026/07/21
+tags:
+    - attack.collection
+    - attack.t1114
+    - attack.exfiltration
+logsource:
+    product: m365
+    service: exchange
+    category: message_trace
+detection:
+    selection_event:
+        EventId:                 # message-tracking event (Exchange msg-tracking / message trace)
+            - 'SEND'             # outbound send to next hop
+            - 'REDIRECT'         # message auto-forwarded / redirected by a rule
+    selection_direction:
+        direction: 'Outbound'
+    selection_domain:
+        recipient_domain:
+            - 'gmail.com'
+            - 'outlook.com'
+            - 'hotmail.com'
+            - 'yahoo.com'
+            - 'proton.me'
+            - 'protonmail.com'
+            - 'icloud.com'
+            - 'aol.com'
+            - 'gmx.com'
+            - 'mail.ru'
+            - 'yandex.com'
+    selection_attachment:
+        attachment_count|gte: 1
+    condition: all of selection_*
+fields:
+    - sender
+    - recipient
+    - recipient_domain
+    - subject
+    - attachment_count
+    - total_size
+falsepositives:
+    - Employees legitimately emailing personal or partner accounts (policy dependent - baseline first)
+level: low
+name: external_mail_attachment
