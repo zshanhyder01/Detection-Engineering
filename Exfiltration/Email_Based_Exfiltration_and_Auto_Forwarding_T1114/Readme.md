@@ -84,12 +84,12 @@ Unlike Windows logs, the M365 audit log identifies each record by a numeric **`R
 
 | # | Rule name | Log source | Audit Event ID (RecordType) | What it detects |
 |---|---|---|---|---|
-| 1 | `inbox_rule_external_forward` | m365:exchange (audit) | `1` ExchangeAdmin, `2` ExchangeItem | A user inbox rule (`New-/Set-InboxRule`) that forwards, redirects, or forwards-as-attachment to an external recipient. |
-| 2 | `mailbox_forwarding_enabled` | m365:exchange (audit) | `1` ExchangeAdmin | Mailbox-level server-side forwarding set via `Set-Mailbox` (`ForwardingSmtpAddress` / `ForwardingAddress`). |
-| 3 | `transport_rule_external_redirect` | m365:exchange (audit) | `1` ExchangeAdmin | An org-wide transport/mail-flow rule that BCCs or redirects mail to an external address. |
-| 4 | `remote_domain_autoforward_enabled` | m365:exchange (audit) | `1` ExchangeAdmin | Tenant external auto-forwarding re-enabled via `Set-RemoteDomain -AutoForwardEnabled`. |
-| 5 | `email_hiding_rule` | m365:exchange (audit) | `1` ExchangeAdmin, `2` ExchangeItem | A stealth inbox rule that forwards/redirects **and** hides evidence (mark-as-read, move-to-folder, delete). |
-| 6 | `external_mail_attachment` | message trace / gateway | `SEND` / `REDIRECT` (msg-tracking EventId) | Outbound mail carrying attachment(s) to a consumer / free-mail domain (the exfil transport itself). |
+| 1 | [`inbox_rule_external_forward`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/exchange/detect_External_%20Email_Forwarding_Inbox_Rule_Created_or_Modified/sigma.yml) | m365:exchange (audit) | `1` ExchangeAdmin, `2` ExchangeItem | A user inbox rule (`New-/Set-InboxRule`) that forwards, redirects, or forwards-as-attachment to an external recipient. |
+| 2 | [`mailbox_forwarding_enabled`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/exchange/Detect_Mailbox_Level_Forwarding_Enabled_to_External_Address/sigma.yml) | m365:exchange (audit) | `1` ExchangeAdmin | Mailbox-level server-side forwarding set via `Set-Mailbox` (`ForwardingSmtpAddress` / `ForwardingAddress`). |
+| 3 | [`transport_rule_external_redirect`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/exchange/Detect_Mail_Flow_Transport_Rule_Redirecting_Mail_Externally/sigma.yml) | m365:exchange (audit) | `1` ExchangeAdmin | An org-wide transport/mail-flow rule that BCCs or redirects mail to an external address. |
+| 4 | [`remote_domain_autoforward_enabled`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/exchange/Detect_External_Auto_Forwarding_Re_Enabled_via_Remote_Domain/sigma.yml) | m365:exchange (audit) | `1` ExchangeAdmin | Tenant external auto-forwarding re-enabled via `Set-RemoteDomain -AutoForwardEnabled`. |
+| 5 | [`email_hiding_rule`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/exchange/Detect_Stealthy_Email_Hiding_and_Forwarding_Inbox_Rule/sigma.yml) | m365:exchange (audit) | `1` ExchangeAdmin, `2` ExchangeItem | A stealth inbox rule that forwards/redirects **and** hides evidence (mark-as-read, move-to-folder, delete). |
+| 6 | [`external_mail_attachment`](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/exchange/Detect_Outbound_Email_with_Attachment_to_ConsumerFree_Mail_Domain/sigma.yml) | message trace / gateway | `SEND` / `REDIRECT` (msg-tracking EventId) | Outbound mail carrying attachment(s) to a consumer / free-mail domain (the exfil transport itself). |
 
 ### List of Correlation Rules
 
