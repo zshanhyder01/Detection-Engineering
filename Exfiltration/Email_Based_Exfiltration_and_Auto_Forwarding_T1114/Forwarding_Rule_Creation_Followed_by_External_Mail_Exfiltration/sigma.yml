@@ -1,0 +1,23 @@
+title: Forwarding Rule Creation Followed by External Mail Exfiltration
+status: test
+description: >
+    Correlates the creation of an external-forwarding inbox rule with a subsequent
+    burst of outbound mail (with attachments) to consumer domains from the same
+    user - confirming the rule is actively exfiltrating and not merely dormant.
+references:
+    - https://attack.mitre.org/techniques/T1114/003/
+author: Detection Engineering
+date: 2026/07/21
+correlation:
+    type: temporal_ordered
+    rules:
+        - inbox_rule_external_forward
+        - external_mail_attachment
+    group-by:
+        - user
+    timespan: 24h
+tags:
+    - attack.collection
+    - attack.t1114.003
+    - attack.exfiltration
+level: high
