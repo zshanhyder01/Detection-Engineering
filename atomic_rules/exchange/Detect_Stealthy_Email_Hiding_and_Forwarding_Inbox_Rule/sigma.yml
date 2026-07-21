@@ -1,0 +1,44 @@
+title: Stealthy Email Hiding and Forwarding Inbox Rule
+status: test
+description: >
+    Detects inbox rules that both forward/redirect mail AND conceal the activity
+    (delete, mark-as-read, move to an obscure folder). This forward-and-hide combo
+    is a hallmark of BEC exfiltration designed to stay invisible to the victim.
+references:
+    - https://attack.mitre.org/techniques/T1114/003/
+    - https://attack.mitre.org/techniques/T1564/008/
+author: Detection Engineering
+date: 2026/07/21
+tags:
+    - attack.collection
+    - attack.t1114.003
+    - attack.defense-evasion
+    - attack.t1564.008
+logsource:
+    product: m365
+    service: exchange
+detection:
+    selection_op:
+        RecordType:
+            - 1   # ExchangeAdmin (New-InboxRule / Set-InboxRule)
+            - 2   # ExchangeItem  (UpdateInboxRules from Outlook client)
+        Operation:
+            - 'New-InboxRule'
+            - 'Set-InboxRule'
+            - 'UpdateInboxRules'
+    selection_forward:
+        Parameters|contains:
+            - 'ForwardTo'
+            - 'ForwardAsAttachmentTo'
+            - 'RedirectTo'
+    selection_hide:
+        Parameters|contains:
+            - 'DeleteMessage'
+            - 'MarkAsRead'
+            - 'MoveToFolder'
+            - 'StopProcessingRules'
+    condition: selection_op and selection_forward and selection_hide
+falsepositives:
+    - Rare power-user rules that both forward and file mail; review the destination and folder
+level: critical
+name: email_hiding_rule
