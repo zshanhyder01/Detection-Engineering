@@ -1,0 +1,35 @@
+title: Mail Flow (Transport) Rule Redirecting Mail Externally
+status: test
+description: >
+    Detects creation or modification of an organization-wide transport rule that
+    blind-copies, redirects, or adds an external recipient to messages - a
+    high-impact exfiltration channel affecting many mailboxes at once.
+references:
+    - https://attack.mitre.org/techniques/T1114/003/
+author: Detection Engineering
+date: 2026/07/21
+tags:
+    - attack.collection
+    - attack.t1114.003
+    - attack.exfiltration
+logsource:
+    product: m365
+    service: exchange
+detection:
+    selection:
+        RecordType: 1            # ExchangeAdmin
+        Operation:
+            - 'New-TransportRule'
+            - 'Set-TransportRule'
+        Parameters|contains:
+            - 'BlindCopyTo'
+            - 'RedirectMessageTo'
+            - 'AddToRecipients'
+            - 'AddManagerAsRecipientType'
+    filter_internal:
+        Parameters|contains: '@yourcompany.com'
+    condition: selection and not filter_internal
+falsepositives:
+    - Legitimate journaling, archiving, or compliance mail-flow rules (validate against change control)
+level: high
+name: transport_rule_external_redirect
