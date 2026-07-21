@@ -1,0 +1,29 @@
+title: External Auto-Forwarding Re-Enabled via Remote Domain
+status: test
+description: >
+    Detects Set-RemoteDomain / New-RemoteDomain enabling AutoForwardEnabled, which
+    overrides the Microsoft 365 default that blocks external auto-forwarding and
+    opens the tenant to mailbox forwarding exfiltration.
+references:
+    - https://attack.mitre.org/techniques/T1114/003/
+author: Detection Engineering
+date: 2026/07/21
+tags:
+    - attack.collection
+    - attack.t1114.003
+    - attack.defense-evasion
+logsource:
+    product: m365
+    service: exchange
+detection:
+    selection:
+        RecordType: 1            # ExchangeAdmin
+        Operation:
+            - 'Set-RemoteDomain'
+            - 'New-RemoteDomain'
+        Parameters|contains: 'AutoForwardEnabled'
+    condition: selection
+falsepositives:
+    - Deliberate policy change by messaging admins to permit external auto-forward (should be rare and reviewed)
+level: high
+name: remote_domain_autoforward_enabled
