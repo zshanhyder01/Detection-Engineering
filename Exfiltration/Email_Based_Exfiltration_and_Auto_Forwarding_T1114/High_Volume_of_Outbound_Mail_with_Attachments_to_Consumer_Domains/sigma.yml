@@ -1,0 +1,25 @@
+title: High Volume of Outbound Mail with Attachments to Consumer Domains
+status: test
+description: >
+    Detects a spike of outbound messages with attachments to consumer domains from
+    a single sender in a short window - indicative of active mailbox draining via a
+    forwarding rule that may pre-date detection or was set through an unaudited path.
+references:
+    - https://attack.mitre.org/techniques/T1114/003/
+    - https://attack.mitre.org/techniques/T1114/
+author: Detection Engineering
+date: 2026/07/21
+correlation:
+    type: event_count
+    rules:
+        - external_mail_attachment
+    group-by:
+        - sender
+    timespan: 1h
+    condition:
+        gte: 20
+tags:
+    - attack.collection
+    - attack.t1114.003
+    - attack.exfiltration
+level: high
