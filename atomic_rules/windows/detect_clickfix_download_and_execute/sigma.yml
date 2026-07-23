@@ -1,0 +1,83 @@
+title: Download-and-Execute Command Line
+name: clickfix_download_and_execute
+status: test
+description: |
+    Detects a script interpreter or living-off-the-land binary fetching remote
+    content and executing it in a single command. This is the payload stage of
+    ClickFix and of many other delivery techniques, and it is detected
+    regardless of how the command was launched.
+references:
+    - https://attack.mitre.org/techniques/T1189/
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://attack.mitre.org/techniques/T1218/005/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1189
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense-evasion
+    - attack.t1218.005
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_interpreter:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\cmd.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+            - '\certutil.exe'
+            - '\bitsadmin.exe'
+            - '\curl.exe'
+            - '\msiexec.exe'
+    selection_remote:
+        CommandLine|contains:
+            - 'http://'
+            - 'https://'
+            - 'ftp://'
+    selection_exec_marker:
+        CommandLine|contains:
+            - 'iex'
+            - 'invoke-expression'
+            - 'invoke-webrequest'
+            - 'invoke-restmethod'
+            - 'iwr '
+            - 'irm '
+            - 'downloadstring'
+            - 'downloadfile'
+            - 'downloaddata'
+            - 'webclient'
+            - 'start-process'
+            - 'urlcache'
+            - '/transfer'
+            - 'frombase64string'
+            - '-w hidden'
+            - '-windowstyle hidden'
+            - '-nop'
+            - '-noprofile'
+            - '-enc'
+            - '-encodedcommand'
+    selection_mshta_remote:
+        Image|endswith: '\mshta.exe'
+        CommandLine|contains:
+            - 'http://'
+            - 'https://'
+            - 'javascript:'
+            - 'vbscript:'
+    condition: (selection_interpreter and selection_remote and selection_exec_marker)
+               or selection_mshta_remote
+fields:
+    - Computer
+    - User
+    - ParentImage
+    - Image
+    - CommandLine
+falsepositives:
+    - Software installation scripts and package managers such as Chocolatey
+    - Legitimate administrative automation that fetches scripts from an
+      internal repository
+    - Vendor troubleshooting instructions that ask the user to run a one-liner
+level: high
