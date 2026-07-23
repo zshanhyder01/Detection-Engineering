@@ -119,11 +119,11 @@ Three rules alert on their own. Two are deliberately broad, too noisy to alert o
  
 | ID | Rule | Log Source | Level | Alerts on its own? |
 |---|---|---|---|---|
-| **AR-01** | Suspicious Command Typed into the Run Dialog | `registry_set` | High | Yes |
-| **AR-02** | Suspicious Command Typed into Explorer Address Bar | `registry_set` | High | Yes |
-| **AR-03** | Download-and-Execute Command Line | `process_creation` | High | Yes |
-| **AR-04** | Explorer Launching a Script Interpreter | `process_creation` | Medium | No — correlation input |
-| **AR-05** | Program Executed from a User-Writable Folder | `process_creation` | Medium | No — correlation input |
+| **AR-01** | [Suspicious Command Typed into the Run Dialog](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_clickfix_runmru_suspicious_command/sigma.yml) | `registry_set` | High | Yes |
+| **AR-02** | [Suspicious Command Typed into Explorer Address Bar](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_clickfix_typedpaths_suspicious_command/sigma.yml) | `registry_set` | High | Yes |
+| **AR-03** | [Download-and-Execute Command Line](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_clickfix_download_and_execute/sigma.yml) | `process_creation` | High | Yes |
+| **AR-04** | [Explorer Launching a Script Interpreter](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_clickfix_explorer_spawns_interpreter/sigma.yml) | `process_creation` | Medium | No — correlation input |
+| **AR-05** | [Program Executed from a User-Writable Folder](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_clickfix_execution_from_user_folder/sigma.yml) | `process_creation` | Medium | No — correlation input |
  
 **What each one gives you:**
  
