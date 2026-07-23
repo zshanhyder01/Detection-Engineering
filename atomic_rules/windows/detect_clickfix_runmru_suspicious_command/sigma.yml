@@ -1,0 +1,60 @@
+title: Suspicious Command Typed into the Run Dialog
+name: clickfix_runmru_suspicious_command
+status: test
+description: |
+    Detects download or script-execution commands recorded in the Run dialog
+    history registry key. This is the defining artefact of a ClickFix attack,
+    where a web page tricks the user into pasting an attacker-supplied command
+    into the Windows Run box.
+references:
+    - https://attack.mitre.org/techniques/T1189/
+    - https://attack.mitre.org/techniques/T1204/004/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1189
+    - attack.execution
+    - attack.t1204.004
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_key:
+        TargetObject|contains: '\Explorer\RunMRU\'
+    selection_command:
+        Details|contains:
+            - 'powershell'
+            - 'pwsh'
+            - 'mshta'
+            - 'wscript'
+            - 'cscript'
+            - 'rundll32'
+            - 'regsvr32'
+            - 'certutil'
+            - 'bitsadmin'
+            - 'msiexec'
+            - 'curl '
+            - 'cmd /c'
+            - 'cmd.exe /c'
+            - 'iwr '
+            - 'irm '
+            - 'iex'
+            - 'invoke-'
+            - 'frombase64string'
+            - 'http://'
+            - 'https://'
+            - '.hta'
+            - '\\\\'
+    filter_optional_mru_list:
+        TargetObject|endswith: '\RunMRU\MRUList'
+    condition: all of selection_* and not 1 of filter_optional_*
+fields:
+    - Computer
+    - User
+    - TargetObject
+    - Details
+falsepositives:
+    - Administrators and IT staff launching PowerShell or UNC paths from the
+      Run dialog as part of normal work
+    - Software installers instructing users to run a command manually
+level: high
