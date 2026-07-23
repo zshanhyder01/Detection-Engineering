@@ -1,0 +1,56 @@
+title: Web Server Process Spawning Shell or Script Interpreter
+name: webserver_spawn_interpreter_win
+status: test
+description: |
+    Detects a web server or application server process starting a command shell
+    or script interpreter on Windows. This is the direct result of a successful
+    attack on an Internet-facing application, or of an attacker using a web
+    shell. It works regardless of which vulnerability was exploited.
+references:
+    - https://attack.mitre.org/techniques/T1190/
+    - https://attack.mitre.org/techniques/T1505/003/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1190
+    - attack.execution
+    - attack.t1059
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - '\w3wp.exe'          # IIS worker process
+            - '\httpd.exe'         # Apache
+            - '\nginx.exe'
+            - '\php-cgi.exe'
+            - '\java.exe'          # Tomcat, JBoss, Confluence, etc.
+            - '\javaw.exe'
+            - '\tomcat9.exe'
+            - '\sqlservr.exe'      # SQL injection to xp_cmdshell
+    selection_child:
+        Image|endswith:
+            - '\cmd.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+            - '\mshta.exe'
+            - '\certutil.exe'
+            - '\bitsadmin.exe'
+            - '\curl.exe'
+            - '\rundll32.exe'
+            - '\regsvr32.exe'
+    condition: all of selection_*
+fields:
+    - Computer
+    - User
+    - ParentImage
+    - Image
+    - CommandLine
+falsepositives:
+    - Deployment tools and CI/CD agents running under the web server account
+    - Java applications that legitimately run scripts for scheduled jobs
+    - Monitoring agents invoked by the application
+level: high
