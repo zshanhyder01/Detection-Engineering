@@ -1,0 +1,47 @@
+title: Explorer Launching a Script Interpreter
+name: clickfix_explorer_spawns_interpreter
+status: test  
+description: |
+    Detects the Windows desktop shell starting a script interpreter or
+    living-off-the-land binary. This is the structural signature of a user
+    manually running a command, including via the Run dialog. Deliberately
+    broad and noisy — intended as a correlation input, not a standalone alert.
+references:
+    - https://attack.mitre.org/techniques/T1189/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1189
+    - attack.execution
+    - attack.t1204.004
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        ParentImage|endswith: '\explorer.exe'
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\cmd.exe'
+            - '\mshta.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+            - '\rundll32.exe'
+            - '\regsvr32.exe'
+            - '\certutil.exe'
+            - '\bitsadmin.exe'
+            - '\curl.exe'
+            - '\msiexec.exe'
+    condition: selection
+fields:
+    - Computer
+    - User
+    - Image
+    - CommandLine
+falsepositives:
+    - Users and administrators legitimately using the Run dialog
+    - Double-clicking scripts, shortcuts, and installers from the desktop or
+      a folder
+    - Pinned taskbar and Start menu shortcuts to command line tools
+level: medium
