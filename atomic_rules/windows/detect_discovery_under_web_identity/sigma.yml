@@ -1,0 +1,48 @@
+title: Discovery Commands Run by Web Server Account
+name: discovery_under_web_identity
+status: test
+description: |
+    Detects information-gathering commands running under a web server service
+    account. Matches on the account rather than the parent process, so it also
+    catches commands run further down the chain after an attacker gets a shell.
+references:
+    - https://attack.mitre.org/techniques/T1190/
+    - https://attack.mitre.org/techniques/T1087/
+date: 2026-07-23
+tags:
+    - attack.discovery
+    - attack.t1087
+    - attack.t1082
+    - attack.initial-access
+    - attack.t1190
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_identity:
+        User|contains:
+            - 'IIS APPPOOL\'
+            - 'NETWORK SERVICE'
+            - 'IUSR'
+    selection_discovery:
+        Image|endswith:
+            - '\whoami.exe'
+            - '\hostname.exe'
+            - '\systeminfo.exe'
+            - '\ipconfig.exe'
+            - '\net.exe'
+            - '\net1.exe'
+            - '\nltest.exe'
+            - '\netstat.exe'
+            - '\tasklist.exe'
+    condition: all of selection_*
+fields:
+    - Computer
+    - User
+    - ParentImage
+    - Image
+    - CommandLine
+falsepositives:
+    - Monitoring and inventory agents that run as NETWORK SERVICE
+    - Application health checks that call hostname or ipconfig
+level: medium
