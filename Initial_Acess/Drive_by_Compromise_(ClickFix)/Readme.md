@@ -134,17 +134,11 @@ Three rules alert on their own. Two are deliberately broad, too noisy to alert o
 - **AR-05** catches the payload actually running from a temporary or user profile folder. Also too noisy alone — a lot of legitimate software genuinely installs and runs from `%APPDATA%`. Its value is in sequence with AR-04.
 ### 4.4 Correlation Rules
  
-One correlation rule is included.
- 
+
 | ID | Rule | Combines | Level |
 |---|---|---|---|
-| **CR-01** | Run Dialog Activity Followed by Payload Execution | AR-04 → AR-05 | High |
+| **CR-01** | [Run Dialog Activity Followed by Payload Execution](https://github.com/zshanhyder01/Detection-Engineering/blob/main/Initial_Acess/Drive_by_Compromise_%28ClickFix%29/detect_Run_Dialog_Activity_Followed_by_Payload_Execution/sigma.yml) | AR-04 → AR-05 | High |
  
-The justification is specific. AR-01 through AR-03 are strong, but every one of them depends on recognising **suspicious content** — a URL, a known interpreter, a download keyword. Attackers obfuscate that content constantly, and heavily obfuscated or novel commands will slip past all three.
- 
-AR-04 and AR-05 avoid that problem by looking only at **structure**: something was launched from the desktop shell, and shortly afterwards a program ran from a temporary folder. Neither observation depends on recognising any particular string, so neither can be evaded by obfuscation. The trade-off is that each is individually far too common to alert on. Joining them in order is what makes the structural signal usable, and that join is something no single log event can express.
- 
-Nothing else here needs correlation. Resist the temptation to add more — the atomic rules carry this technique well, and correlation rules cost considerably more to build, tune, and maintain.
  
 ---
  
