@@ -1,0 +1,55 @@
+title: Web Shell Written to Website Folder
+name: webshell_write_to_webroot
+status: test
+description: |
+    Detects a server-side script file being created inside a folder that the web
+    server will execute. This is how an attacker installs a web shell to keep
+    access after the initial exploit. It fires even when the attack created no
+    new process, such as with file upload vulnerabilities.
+references:
+    - https://attack.mitre.org/techniques/T1505/003/
+    - https://attack.mitre.org/techniques/T1190/
+date: 2026-07-23
+tags:
+    - attack.persistence
+    - attack.t1505.003
+    - attack.initial-access
+    - attack.t1190
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - '\inetpub\wwwroot\'
+            - '\wwwroot\'
+            - '\htdocs\'
+            - '\webapps\'
+            - '\www\'
+    selection_ext:
+        TargetFilename|endswith:
+            - '.aspx'
+            - '.asp'
+            - '.ashx'
+            - '.asmx'
+            - '.php'
+            - '.jsp'
+            - '.jspx'
+            - '.war'
+    filter_optional_deployment:
+        Image|endswith:
+            - '\msdeploy.exe'      # official IIS deployment tool
+            - '\msiexec.exe'
+            - '\TiWorker.exe'      # Windows Update
+            - '\TrustedInstaller.exe'
+    condition: all of selection_* and not 1 of filter_optional_*
+fields:
+    - Computer
+    - User
+    - Image
+    - TargetFilename
+falsepositives:
+    - Application deployments done by hand instead of through the deployment tool
+    - Vendor patching that replaces application files in place
+    - Developers editing files directly on a server
+level: high
