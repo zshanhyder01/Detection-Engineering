@@ -1,0 +1,27 @@
+title: Run Dialog Activity Followed by Payload Execution
+status: test
+description: |
+    Links a script interpreter launched from the desktop shell with a program
+    subsequently running from a user-writable folder on the same machine. This
+    is the ClickFix execution chain — user pastes a command, command downloads
+    a payload, payload runs — detected without relying on any specific command
+    line content.
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1189
+    - attack.execution
+    - attack.t1204.004
+correlation:
+    type: temporal_ordered
+    rules:
+        - clickfix_explorer_spawns_interpreter   # AR-04 — must happen first
+        - clickfix_execution_from_user_folder    # AR-05 — must happen after
+    group-by:
+        - Computer
+    timespan: 10m
+falsepositives:
+    - A user running an installer from the Run dialog, which then extracts and
+      executes from a temporary folder
+    - Administrative scripts that download and launch tooling
+level: high
