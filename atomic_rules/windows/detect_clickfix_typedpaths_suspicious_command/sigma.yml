@@ -1,0 +1,54 @@
+title: Suspicious Command Typed into Explorer Address Bar
+name: clickfix_typedpaths_suspicious_command
+status: test
+description: |
+    Detects download or script-execution commands recorded in the File Explorer
+    address bar history. Covers the ClickFix variant that instructs the victim
+    to paste into an Explorer window instead of the Run dialog.
+references:
+    - https://attack.mitre.org/techniques/T1189/
+    - https://attack.mitre.org/techniques/T1204/004/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1189
+    - attack.execution
+    - attack.t1204.004
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_key:
+        TargetObject|contains: '\Explorer\TypedPaths\'
+    selection_command:
+        Details|contains:
+            - 'powershell'
+            - 'pwsh'
+            - 'mshta'
+            - 'wscript'
+            - 'cscript'
+            - 'rundll32'
+            - 'regsvr32'
+            - 'certutil'
+            - 'bitsadmin'
+            - 'curl '
+            - 'cmd /c'
+            - 'cmd.exe /c'
+            - 'iwr '
+            - 'irm '
+            - 'iex'
+            - 'invoke-'
+            - 'frombase64string'
+            - 'http://'
+            - 'https://'
+            - '.hta'
+    condition: all of selection_*
+fields:
+    - Computer
+    - User
+    - TargetObject
+    - Details
+falsepositives:
+    - Users pasting a legitimate web URL into an Explorer window by mistake
+    - Administrators using the address bar to launch tools
+level: high
