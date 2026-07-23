@@ -1,0 +1,47 @@
+title: Program Executed from a User-Writable Folder
+name: clickfix_execution_from_user_folder
+status: test
+description: |
+    Detects a program running from a temporary or user profile directory.
+    These locations are where downloaded payloads land, because they are
+    writable without administrative rights. Noisy on its own — intended as a
+    correlation input.
+references:
+    - https://attack.mitre.org/techniques/T1189/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1189
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|contains:
+            - '\AppData\Local\Temp\'
+            - '\AppData\Roaming\'
+            - '\Users\Public\'
+            - '\Downloads\'
+            - '\Windows\Temp\'
+    filter_optional_known_software:
+        Image|contains:
+            - '\AppData\Local\Microsoft\Teams\'
+            - '\AppData\Local\Programs\Microsoft VS Code\'
+            - '\AppData\Local\Slack\'
+            - '\AppData\Local\Discord\'
+            - '\AppData\Local\Google\Update\'
+            - '\AppData\Local\Microsoft\OneDrive\'
+    condition: selection and not 1 of filter_optional_*
+fields:
+    - Computer
+    - User
+    - ParentImage
+    - Image
+    - CommandLine
+falsepositives:
+    - Legitimate applications that install to the user profile, which is
+      increasingly common
+    - Software installers extracting and running from a temporary folder
+    - Browser and application auto-updaters
+level: medium
