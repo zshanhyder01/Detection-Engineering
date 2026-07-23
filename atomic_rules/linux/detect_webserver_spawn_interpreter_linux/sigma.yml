@@ -1,0 +1,59 @@
+title: Linux Web Server Process Spawning Shell or Interpreter
+name: webserver_spawn_interpreter_linux
+status: test
+description: |
+    Detects a web server process on Linux starting a shell, interpreter, or
+    network tool. Indicates successful exploitation of an Internet-facing
+    application, command injection, or web shell usage.
+references:
+    - https://attack.mitre.org/techniques/T1190/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1190
+    - attack.execution
+    - attack.t1059.004
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - '/httpd'
+            - '/apache2'
+            - '/nginx'
+            - '/php-fpm'
+            - '/tomcat'
+            - '/node'
+    selection_child:
+        Image|endswith:
+            - '/sh'
+            - '/bash'
+            - '/dash'
+            - '/python'
+            - '/python3'
+            - '/perl'
+            - '/nc'
+            - '/ncat'
+            - '/curl'
+            - '/wget'
+    selection_reverse_shell:
+        CommandLine|contains:
+            - '/dev/tcp/'          # bash reverse shell
+            - 'bash -i'
+            - 'sh -i'
+            - 'nc -e'
+            - 'pty.spawn'          # python reverse shell
+            - 'base64 -d'
+    condition: selection_parent and (selection_child or selection_reverse_shell)
+fields:
+    - hostname
+    - User
+    - ParentImage
+    - Image
+    - CommandLine
+falsepositives:
+    - PHP applications that call shell tools for image resizing, PDF generation,
+      or sending mail
+    - Health check scripts run by the web daemon
+level: high
