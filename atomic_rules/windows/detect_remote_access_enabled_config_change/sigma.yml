@@ -1,0 +1,60 @@
+title: Remote Access Enabled by Configuration Change
+name: remote_access_enabled_config_change
+status: test
+description: |
+    Detects commands that enable Remote Desktop, open the firewall for remote
+    access, configure a port forward, or enable PowerShell Remoting. These are
+    the actions an attacker takes to widen or create remote access after
+    gaining a foothold.
+references:
+    - https://attack.mitre.org/techniques/T1133/
+    - https://attack.mitre.org/techniques/T1021/001/
+author: Detection Engineering Team
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1133
+    - attack.persistence
+    - attack.defense-evasion
+    - attack.t1562.004
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_enable_rdp:
+        CommandLine|contains|all:
+            - 'fDenyTSConnections'
+            - '0'
+    selection_firewall_rdp:
+        CommandLine|contains|all:
+            - 'netsh'
+            - 'firewall'
+        CommandLine|contains:
+            - '3389'
+            - 'Remote Desktop'
+            - 'remotedesktop'
+    selection_portproxy:
+        CommandLine|contains|all:
+            - 'netsh'
+            - 'portproxy'
+            - 'add'
+    selection_psremoting:
+        CommandLine|contains:
+            - 'Enable-PSRemoting'
+            - 'Set-WSManQuickConfig'
+    selection_termservice:
+        CommandLine|contains|all:
+            - 'TermService'
+            - 'start= auto'
+    condition: 1 of selection_*
+fields:
+    - Computer
+    - User
+    - Image
+    - CommandLine
+    - ParentImage
+falsepositives:
+    - Administrators legitimately enabling remote access on a new server
+    - Build and imaging scripts that configure RDP as part of provisioning
+    - Configuration management tooling such as Ansible, Puppet, or Intune
+level: high
