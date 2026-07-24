@@ -1,0 +1,42 @@
+title: Failed Logon to a Remote Service
+name: failed_remote_logon
+status: test
+description: |
+    Records failed authentication attempts for network and Remote Desktop
+    logons. Extremely high volume on any exposed system — this rule exists
+    solely as an input to the correlation rule and must never be routed to an
+    alert queue on its own.
+references:
+    - https://attack.mitre.org/techniques/T1133/
+    - https://attack.mitre.org/techniques/T1110/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1133
+    - attack.credential-access
+    - attack.t1110
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4625
+        LogonType:
+            - 3
+            - 10
+    filter_main_machine_accounts:
+        TargetUserName|endswith: '$'
+    condition: selection and not 1 of filter_main_*
+fields:
+    - Computer
+    - TargetUserName
+    - IpAddress
+    - LogonType
+    - Status
+    - SubStatus
+falsepositives:
+    - Users mistyping passwords
+    - Expired cached credentials on laptops and mobile devices
+    - Service accounts with stale passwords in scheduled tasks
+    - Continuous automated password guessing from the Internet
+level: low
