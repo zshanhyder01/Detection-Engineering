@@ -155,5 +155,5 @@ So: these five rules cover the Windows side of T1133, and your IdP covers the id
  
 | ID | Rule | Combines | Level |
 |---|---|---|---|
-| **CR-01** | Password Guessing Followed by Successful External Logon | AR-05 (repeated) → AR-01 | Critical |
+| **CR-01** | [Password Guessing Followed by Successful External Logon](https://github.com/zshanhyder01/Detection-Engineering/blob/main/Initial_Acess/External_Remote_Services_T1133/Password_Guessing_Followed_by_Successful_External_Logon/sigma.yml) | AR-05 (repeated) → AR-01 | Critical |
 
