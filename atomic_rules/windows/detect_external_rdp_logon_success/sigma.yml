@@ -1,0 +1,52 @@
+title: Successful RDP Logon from a Public IP Address
+name: external_rdp_logon_success
+status: Test
+description: |
+    Detects a successful Remote Desktop logon where the source address is not
+    an internal one. On a network where remote access is funnelled through a
+    VPN or gateway, this indicates RDP is directly exposed to the Internet and
+    someone has authenticated to it.
+references:
+    - https://attack.mitre.org/techniques/T1133/
+    - https://attack.mitre.org/techniques/T1021/001/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1133
+    - attack.lateral-movement
+    - attack.t1021.001
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4624
+        LogonType: 10
+    filter_main_internal:
+        IpAddress|cidr:
+            - '10.0.0.0/8'
+            - '172.16.0.0/12'
+            - '192.168.0.0/16'
+            - '127.0.0.0/8'
+            - '169.254.0.0/16'
+            - '::1/128'
+            - 'fc00::/7'
+            - 'fe80::/10'
+    filter_main_local:
+        IpAddress:
+            - '-'
+            - ''
+    condition: selection and not 1 of filter_main_*
+fields:
+    - Computer
+    - TargetUserName
+    - TargetDomainName
+    - IpAddress
+    - WorkstationName
+    - LogonType
+falsepositives:
+    - Legitimate remote access where the VPN pool is not covered by the
+      internal ranges above
+    - Cloud-hosted servers reached over RDP by administrators
+    - Third parties and vendors with sanctioned direct RDP access
+level: high
