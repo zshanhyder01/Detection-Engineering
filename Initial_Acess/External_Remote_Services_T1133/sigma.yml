@@ -1,0 +1,26 @@
+title: Password Guessing Followed by Successful External Logon
+status: test
+description: |
+    Detects a source address producing a high volume of failed logons and then
+    successfully authenticating over Remote Desktop from outside the network.
+    This is a password guessing or spraying attack that succeeded, and should
+    be treated as a confirmed compromise of the account involved.
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1133
+    - attack.credential-access
+    - attack.t1110
+correlation:
+    type: temporal_ordered
+    rules:
+        - many_failed_remote_logons          # must happen first
+        - detect_external_rdp_logon_success        # AR-01 — must happen after
+    group-by:
+        - IpAddress
+    timespan: 1h
+falsepositives:
+    - A user repeatedly mistyping their password before eventually getting it
+      right, from a location outside the internal ranges
+    - Authorised penetration testing
+level: critical
