@@ -130,6 +130,14 @@ That is not a reason to skip them. RDP exposed to the internet is still one of t
 | **AR-03** | Network Tunnelling Tool Executed | `process_creation` | High | Yes |
 | **AR-04** | Remote Access Enabled by Configuration Change | `process_creation` | High | Yes |
 | **AR-05** | Failed Logon to a Remote Service | `windows/security` | Low | No — correlation input |
+
+| ID | Rule | Log Source | Level | Alerts on its own? |
+|---|---|---|---|---|
+| **AR-01** | [Successful RDP Logon from a Public IP Address](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_external_rdp_logon_success/sigma.yml) | `windows/security` | High | Yes |
+| **AR-02** | [Unsanctioned Remote Access Tool Running](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_unsanctioned_remote_access_tool/sigma.yml) | `process_creation` | High | Yes |
+| **AR-03** | [Network Tunnelling Tool Executed](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_tunnelling_tool_execution/sigma.yml) | `process_creation` | High | Yes |
+| **AR-04** | [Remote Access Enabled by Configuration Change](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_remote_access_enabled_config_change/sigma.yml) | `process_creation` | High | Yes |
+| **AR-05** | [Failed Logon to a Remote Service](https://github.com/zshanhyder01/Detection-Engineering/blob/main/atomic_rules/windows/detect_Failed_Logon_to_a_Remote_Service/sigma.yml) | `windows/security` | Low | No — correlation input |
  
 What each rule does for you:
  
