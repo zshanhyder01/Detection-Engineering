@@ -122,14 +122,6 @@ A Fortinet, Palo Alto, Cisco ASA or Citrix box does not write to the Windows Sec
 That is not a reason to skip them. RDP exposed to the internet is still one of the most common ways ransomware gets in, and rules AR-02 to AR-04 work no matter how the attacker arrived. But be honest about the gap. Full coverage means pulling your VPN logs into the SIEM and writing the same logic there in your SIEM's own query language.
  
 ### 4.4 Atomic Rules
- 
-| ID | Rule | Log Source | Level | Alerts on its own? |
-|---|---|---|---|---|
-| **AR-01** | Successful RDP Logon from a Public IP Address | `windows/security` | High | Yes |
-| **AR-02** | Unsanctioned Remote Access Tool Running | `process_creation` | High | Yes |
-| **AR-03** | Network Tunnelling Tool Executed | `process_creation` | High | Yes |
-| **AR-04** | Remote Access Enabled by Configuration Change | `process_creation` | High | Yes |
-| **AR-05** | Failed Logon to a Remote Service | `windows/security` | Low | No — correlation input |
 
 | ID | Rule | Log Source | Level | Alerts on its own? |
 |---|---|---|---|---|
@@ -160,7 +152,6 @@ So: these five rules cover the Windows side of T1133, and your IdP covers the id
  
 ### 4.6 Correlation Rules
  
-One correlation rule.
  
 | ID | Rule | Combines | Level |
 |---|---|---|---|
