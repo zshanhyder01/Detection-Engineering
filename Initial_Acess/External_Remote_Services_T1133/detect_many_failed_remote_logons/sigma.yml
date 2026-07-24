@@ -1,0 +1,15 @@
+title: High Volume of Failed Remote Logons from One Source
+name: many_failed_remote_logons
+status: test
+description: Counts failed remote logons from a single source address.
+date: 2026-07-23
+correlation:
+    type: event_count
+    rules:
+        - detect_Failed_Logon_to_a_Remote_Service               # AR-05
+    group-by:
+        - IpAddress
+    timespan: 30m
+    condition:
+        gte: 15
+level: medium
