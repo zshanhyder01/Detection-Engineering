@@ -1,0 +1,66 @@
+title: Unsanctioned Remote Access Tool Running
+name: unsanctioned_remote_access_tool
+status: test
+description: |
+    Detects commercial remote monitoring and management software running on an
+    endpoint. Attackers install these tools to keep access after a compromised
+    password is reset, because they are signed, legitimate, and rarely blocked
+    by application control.
+references:
+    - https://attack.mitre.org/techniques/T1133/
+    - https://attack.mitre.org/techniques/T1219/
+date: 2026-07-23
+tags:
+    - attack.initial-access
+    - attack.t1133
+    - attack.persistence
+    - attack.command-and-control
+    - attack.t1219
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        - Image|endswith:
+              - '\AnyDesk.exe'
+              - '\TeamViewer.exe'
+              - '\TeamViewer_Service.exe'
+              - '\ScreenConnect.ClientService.exe'
+              - '\ScreenConnect.WindowsClient.exe'
+              - '\AteraAgent.exe'
+              - '\SplashtopStreamer.exe'
+              - '\SRService.exe'
+              - '\client32.exe'
+              - '\rustdesk.exe'
+              - '\UltraViewer_Desktop.exe'
+              - '\Supremo.exe'
+              - '\RemotePC.exe'
+              - '\LogMeIn.exe'
+              - '\LMIGuardianSvc.exe'
+              - '\MeshAgent.exe'
+              - '\dwagent.exe'
+              - '\GoToAssist.exe'
+        - OriginalFileName:
+              - 'AnyDesk.exe'
+              - 'TeamViewer.exe'
+              - 'ScreenConnect.ClientService.exe'
+              - 'AteraAgent.exe'
+              - 'client32.exe'
+              - 'rustdesk.exe'
+              - 'MeshAgent.exe'
+    filter_optional_approved_tool:
+        Image|endswith: '\TeamViewer.exe'          # replace with YOUR tool
+    condition: selection_image and not 1 of filter_optional_*
+fields:
+    - Computer
+    - User
+    - Image
+    - OriginalFileName
+    - CommandLine
+    - ParentImage
+falsepositives:
+    - Your organisation's approved remote support tool
+    - IT staff or vendors using a second tool for a specific supported
+      application
+    - Users installing a tool themselves to support a family member
+level: high
